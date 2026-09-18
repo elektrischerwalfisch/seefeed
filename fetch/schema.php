@@ -2,11 +2,11 @@
 declare(strict_types=1);
 
 /**
- * Schaufeed – build Schema.org JSON-LD for events from events.json + venues.json.
+ * Seefeed – build Schema.org JSON-LD for events from events.json + venues.json.
  *
  * @file        fetch/schema.php
- * @project     Schaufeed
- * @author      Schaufeed
+ * @project     Seefeed
+ * @author      Seefeed
  * @version     0.1.0
  * @since       2026-09
  * @see         fetch/fetch.php
@@ -25,7 +25,7 @@ declare(strict_types=1);
  * @param array{filter?:string,eventType?:string,eventImageBase?:string} $options
  * @return list<array<string, mixed>>
  */
-function schaufeedBuildEventsJsonLd(array $events, array $venues, array $options = []): array
+function SeefeedBuildEventsJsonLd(array $events, array $venues, array $options = []): array
 {
     $filter = strtolower((string) ($options['filter'] ?? 'upcoming'));
     $eventType = (string) ($options['eventType'] ?? 'Event');
@@ -46,8 +46,8 @@ function schaufeedBuildEventsJsonLd(array $events, array $venues, array $options
     $out = [];
 
     foreach ($events as $event) {
-        $endDay = schaufeedSchemaDatePart((string) ($event['end'] ?? $event['start'] ?? ''));
-        $startDay = schaufeedSchemaDatePart((string) ($event['start'] ?? ''));
+        $endDay = SeefeedSchemaDatePart((string) ($event['end'] ?? $event['start'] ?? ''));
+        $startDay = SeefeedSchemaDatePart((string) ($event['start'] ?? ''));
         if ($startDay === '') {
             continue;
         }
@@ -78,7 +78,7 @@ function schaufeedBuildEventsJsonLd(array $events, array $venues, array $options
             'name' => $locationName !== '' ? $locationName : 'Unknown',
         ];
         if (is_array($venue)) {
-            $address = schaufeedSchemaPostalAddress($venue);
+            $address = SeefeedSchemaPostalAddress($venue);
             if ($address !== null) {
                 $place['address'] = $address;
             }
@@ -103,7 +103,7 @@ function schaufeedBuildEventsJsonLd(array $events, array $venues, array $options
 
         $attach = (string) ($event['attach'] ?? '');
         if ($attach !== '' && $imageBase !== '') {
-            $filename = schaufeedSchemaAttachBasename($attach);
+            $filename = SeefeedSchemaAttachBasename($attach);
             if ($filename !== '') {
                 $item['image'] = $imageBase . $filename;
             }
@@ -123,14 +123,14 @@ function schaufeedBuildEventsJsonLd(array $events, array $venues, array $options
  * @param array{filter?:string,eventType?:string,eventImageBase?:string} $options
  * @return int Number of schema items written
  */
-function schaufeedWriteEventsSchemaFile(string $dataDir, array $options = []): int
+function SeefeedWriteEventsSchemaFile(string $dataDir, array $options = []): int
 {
     $eventsPath = $dataDir . '/events.json';
     $venuesPath = $dataDir . '/venues.json';
     $outPath = $dataDir . '/events.schema.json';
 
-    $eventsData = schaufeedSchemaLoadJson($eventsPath);
-    $venuesData = schaufeedSchemaLoadJson($venuesPath);
+    $eventsData = SeefeedSchemaLoadJson($eventsPath);
+    $venuesData = SeefeedSchemaLoadJson($venuesPath);
     $events = $eventsData['events'] ?? [];
     $venues = $venuesData['venues'] ?? [];
     if (!is_array($events) || !is_array($venues)) {
@@ -139,8 +139,8 @@ function schaufeedWriteEventsSchemaFile(string $dataDir, array $options = []): i
 
     /** @var list<array<string, mixed>> $events */
     /** @var list<array<string, mixed>> $venues */
-    $schema = schaufeedBuildEventsJsonLd($events, $venues, $options);
-    schaufeedSchemaWriteJsonAtomic($outPath, $schema);
+    $schema = SeefeedBuildEventsJsonLd($events, $venues, $options);
+    SeefeedSchemaWriteJsonAtomic($outPath, $schema);
 
     return count($schema);
 }
@@ -148,7 +148,7 @@ function schaufeedWriteEventsSchemaFile(string $dataDir, array $options = []): i
 /**
  * @return array<string, mixed>
  */
-function schaufeedSchemaLoadJson(string $path): array
+function SeefeedSchemaLoadJson(string $path): array
 {
     if (!is_file($path)) {
         throw new RuntimeException('Missing file: ' . $path);
@@ -168,7 +168,7 @@ function schaufeedSchemaLoadJson(string $path): array
 /**
  * @param list<array<string, mixed>>|array<string, mixed> $data
  */
-function schaufeedSchemaWriteJsonAtomic(string $path, array $data): void
+function SeefeedSchemaWriteJsonAtomic(string $path, array $data): void
 {
     $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if ($json === false) {
@@ -186,7 +186,7 @@ function schaufeedSchemaWriteJsonAtomic(string $path, array $data): void
     }
 }
 
-function schaufeedSchemaDatePart(string $iso): string
+function SeefeedSchemaDatePart(string $iso): string
 {
     if ($iso === '') {
         return '';
@@ -199,7 +199,7 @@ function schaufeedSchemaDatePart(string $iso): string
  * @param array<string, mixed> $venue
  * @return array<string, string>|null
  */
-function schaufeedSchemaPostalAddress(array $venue): ?array
+function SeefeedSchemaPostalAddress(array $venue): ?array
 {
     $street = trim((string) ($venue['street'] ?? ''));
     $postal = trim((string) ($venue['postalCode'] ?? ''));
@@ -226,7 +226,7 @@ function schaufeedSchemaPostalAddress(array $venue): ?array
     return $address;
 }
 
-function schaufeedSchemaAttachBasename(string $attach): string
+function SeefeedSchemaAttachBasename(string $attach): string
 {
     $trimmed = rtrim($attach, '/');
     if ($trimmed === '') {

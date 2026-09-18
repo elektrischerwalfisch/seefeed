@@ -1,12 +1,12 @@
 /**
- * Schaufeed – render calendar events from JSON into [data-events] mounts.
+ * Seefeed – render calendar events from JSON into [data-events] mounts.
  *
  * Loads events/venues via XHR, filters (upcoming|past|all|latest), fills HTML
- * <template> clones. Options: window.Schaufeed before this script loads.
+ * <template> clones. Options: window.Seefeed before this script loads.
  *
- * @file        core/js/schaufeed.js
- * @project     Schaufeed
- * @author      Schaufeed
+ * @file        core/js/seefeed.js
+ * @project     Seefeed
+ * @author      Seefeed
  * @version     0.1.0
  * @since       2026-09
  * @requires    DOM with [data-events] mounts and #event-{name} templates
@@ -15,8 +15,8 @@
 
 "use strict";
 
-// --- Options (adapter may set window.Schaufeed before this script) ----------
-const cfg = window.Schaufeed || {};
+// --- Options (adapter may set window.Seefeed before this script) ----------
+const cfg = window.Seefeed || {};
 // Defaults assume runtime under data/; plain adapter points at demo-data/
 const eventsUrl = cfg.eventsUrl || "../../data/events.json";
 const venuesUrl = cfg.venuesUrl || "../../data/venues.json";

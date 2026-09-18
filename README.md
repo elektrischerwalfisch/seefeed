@@ -1,4 +1,4 @@
-# Schaufeed
+# Seefeed
 
 Load events from a Nextcloud calendar (and venues from a CardDAV address book) and render them on a website via AJAX. Core assets are CMS-agnostic; thin adapters wire them into a host site. A plain demo adapter is included; WordPress (and other hosts) can follow the same pattern.
 
@@ -17,7 +17,7 @@ php fetch/fetch.php
 Shared-hosting cron (HTTP):
 
 ```bash
-curl -fsS "https://www.example.com/path/to/schaufeed/fetch/fetch.php?token=YOUR_FETCH_TOKEN"
+curl -fsS "https://www.example.com/path/to/seefeed/fetch/fetch.php?token=YOUR_FETCH_TOKEN"
 ```
 
 `fetch/config.php` is gitignored. Web calls without a valid `fetch_token` return 403. `config.php` is blocked via `.htaccess`. On success the script writes `data/events.json` and `data/venues.json` atomically (on failure, previous files are kept). Optional `write_schema => true` also writes `data/events.schema.json` (Schema.org JSON-LD).
@@ -35,7 +35,7 @@ chmod 666 data/events.json data/venues.json
 ## Layout
 
 ```text
-schaufeed/
+seefeed/
   core/           # JS, default CSS, HTML templates
   fetch/          # Nextcloud → JSON; optional schema.php
   adapters/
@@ -47,11 +47,11 @@ schaufeed/
 
 ## Embed on a host site
 
-1. Ship or submodule this repository into the host (e.g. `vendor/schaufeed`).
-2. Include `core/js/schaufeed.js` and optionally `core/css/schaufeed.css`.
+1. Ship or submodule this repository into the host (e.g. `vendor/seefeed`).
+2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css`.
 3. Place mounts such as `<section data-events data-filter="upcoming" data-template="teaser"></section>`.
 4. Include the matching templates (`core/templates/event-*.html`) or host copies.
-5. Set `window.Schaufeed` before the script (JSON URLs, locale, counts, …) or rely on defaults pointing at `data/`.
+5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, …) or rely on defaults pointing at `data/`.
 6. Run `fetch/fetch.php` on a schedule so `data/` stays current.
 
 See `adapters/plain/index.php` for a minimal working example.

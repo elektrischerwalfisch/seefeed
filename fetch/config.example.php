@@ -1,6 +1,6 @@
 <?php
 /**
- * Schaufeed fetch config example – copy to config.php and fill in real values.
+ * Seefeed fetch config example – copy to config.php and fill in real values.
  * config.php is gitignored — never commit credentials.
  *
  * Keys:
@@ -14,11 +14,11 @@
  *   schema_filter             "upcoming" (default) | "all"
  *   schema_event_type         Schema.org @type (default "Event"; e.g. "ExhibitionEvent")
  *   schema_event_image_base   Optional image URL prefix for JSON-LD (ATTACH basenames).
- *                             Separate from frontend window.Schaufeed.eventImageBase.
+ *                             Separate from frontend window.Seefeed.eventImageBase.
  *
  * @file        fetch/config.example.php
- * @project     Schaufeed
- * @author      Schaufeed
+ * @project     Seefeed
+ * @author      Seefeed
  * @version     0.1.0
  * @since       2026-09
  * @see         fetch/fetch.php

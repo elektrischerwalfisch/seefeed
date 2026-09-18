@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * Schaufeed fetch – pull Nextcloud calendar (CalDAV/ICS) and venues (CardDAV/vCard)
+ * Seefeed fetch – pull Nextcloud calendar (CalDAV/ICS) and venues (CardDAV/vCard)
  * into data/events.json and data/venues.json.
  *
  * Setup: cp config.example.php config.php and fill credentials.
@@ -10,8 +10,8 @@ declare(strict_types=1);
  * Cron:  curl -fsS "https://example/fetch/fetch.php?token=YOUR_FETCH_TOKEN"
  *
  * @file        fetch/fetch.php
- * @project     Schaufeed
- * @author      Schaufeed
+ * @project     Seefeed
+ * @author      Seefeed
  * @version     0.1.0
  * @since       2026-09
  * @see         fetch/config.example.php
@@ -82,7 +82,7 @@ try {
             'eventType' => (string) ($config['schema_event_type'] ?? 'Event'),
             'eventImageBase' => (string) ($config['schema_event_image_base'] ?? ''),
         ];
-        $schemaCount = schaufeedWriteEventsSchemaFile($dataDir, $schemaOptions);
+        $schemaCount = SeefeedWriteEventsSchemaFile($dataDir, $schemaOptions);
         emitLine('Wrote events.schema.json (' . $schemaCount . ' events)');
     }
     
@@ -166,7 +166,7 @@ function httpRequest(
     }
 
     $reqHeaders = array_merge([
-        'User-Agent: schaufeed-fetch/1.0',
+        'User-Agent: Seefeed-fetch/1.0',
         'Accept: */*',
     ], $headers);
 
