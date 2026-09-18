@@ -1,0 +1,9 @@
+.env
+fetch/config.php
+docker-compose.yml
+/index.php
+/doc/
+
+# Runtime output from fetch (demo JSON lives in demo-data/)
+/data/*
+!/data/.gitkeep

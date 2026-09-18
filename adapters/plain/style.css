@@ -1,0 +1,69 @@
+/**
+ * Schaufeed plain adapter – page frame only (event styles: core/css/schaufeed.css).
+ *
+ * @file        adapters/plain/style.css
+ * @project     Schaufeed
+ * @author      Schaufeed
+ * @version     0.1.0
+ * @since       2026-09
+ */
+
+:root {
+    --base: #e4e2dc;
+    --contrast: #2a2926;
+    --primary: #666;
+    --surface: #fff;
+    --canvas: #f7f5f1;
+}
+
+*,
+:is(*::before, *::after) {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 2.5rem 1.25rem 3rem;
+    color: var(--contrast);
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, var(--base) 0%, transparent 55%),
+        var(--canvas);
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+#wrapper {
+    max-width: 38rem;
+    margin: 0 auto;
+
+    h1 {
+        margin: 0 0 1.25rem;
+        color: var(--contrast);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.85rem;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        text-align: center;
+    }
+
+    .panel {
+        margin: 0 0 1.5rem;
+        padding: 0 1.25rem 2rem;
+        background-color: var(--surface);
+
+        h2 {
+            margin: 0 -1.25rem 1.25rem;
+            padding: 0.65rem 1.25rem;
+            color: var(--canvas);
+            background-color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+    }
+}

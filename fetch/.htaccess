@@ -1,0 +1,6 @@
+# Require all denied
+
+# Allow cron via URL; token is checked in fetch.php
+<Files "fetch.php">
+    Require all granted
+</Files>

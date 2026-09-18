@@ -1,0 +1,31 @@
+{
+    "venues": [
+        {
+            "fn": "City Hall Annex",
+            "org": "City Cultural Office",
+            "url": "https://example.org/city-hall-annex",
+            "street": "Example Street 12",
+            "postalCode": "10115",
+            "locality": "Berlin",
+            "country": "DE"
+        },
+        {
+            "fn": "Community Center East",
+            "org": "Community Center East",
+            "url": "https://example.org/community-center-east",
+            "street": "Sample Road 3",
+            "postalCode": "10117",
+            "locality": "Berlin",
+            "country": "DE"
+        },
+        {
+            "fn": "Harbor Meeting Room",
+            "org": "Harbor Venue Ltd.",
+            "url": "https://example.org/harbor-meeting-room",
+            "street": "Quay 7",
+            "postalCode": "20457",
+            "locality": "Hamburg",
+            "country": "DE"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "events": [
+        {
+            "summary": "Workshop series (multi-day, no time)",
+            "start": "2026-10-05",
+            "end": "2026-10-12",
+            "location": "City Hall Annex",
+            "categories": [
+                "Workshop"
+            ],
+            "description": "Demo event spanning several calendar days without clock times."
+        },
+        {
+            "summary": "Conference block (multi-day, with time)",
+            "start": "2026-06-12T09:00:00",
+            "end": "2026-06-14T17:00:00",
+            "location": "Harbor Meeting Room",
+            "categories": [
+                "Conference"
+            ],
+            "description": "Demo event spanning several days with start and end times.",
+            "attach": "demo-poster.svg"
+        },
+        {
+            "summary": "Open day (single-day, no time)",
+            "start": "2026-03-01",
+            "end": "2026-03-01",
+            "location": "City Hall Annex",
+            "categories": [
+                "Open day"
+            ],
+            "description": "Demo event on one calendar day without clock times."
+        },
+        {
+            "summary": "Evening talk (single-day, with time)",
+            "start": "2025-11-08T19:00:00",
+            "end": "2025-11-08T21:30:00",
+            "location": "Community Center East",
+            "categories": [
+                "Talk"
+            ],
+            "description": "Demo event on one day with start and end times."
+        },
+        {
+            "summary": "Festival week (multi-day, no time)",
+            "start": "2024-05-10",
+            "end": "2024-05-18",
+            "location": "Harbor Meeting Room",
+            "categories": [
+                "Festival"
+            ],
+            "description": "Past demo event spanning several days without clock times."
+        }
+    ]
+}
