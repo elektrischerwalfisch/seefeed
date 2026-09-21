@@ -326,16 +326,44 @@ function unfoldIcs(string $ics): string
 }
 
 /**
+ * Split an unfolded ICS/vCard content line into name+params and value.
+ * Colons inside quoted parameter values (e.g. ALTREP="data:text/html,...")
+ * must not be treated as the name/value separator.
+ *
+ * @return array{0: string, 1: string}|null
+ */
+function splitIcsContentLine(string $line): ?array
+{
+    $inQuotes = false;
+    $length = strlen($line);
+    for ($i = 0; $i < $length; $i++) {
+        $char = $line[$i];
+        if ($char === '"') {
+            $inQuotes = !$inQuotes;
+            continue;
+        }
+        if ($char === ':' && !$inQuotes) {
+            return [substr($line, 0, $i), substr($line, $i + 1)];
+        }
+    }
+    return null;
+}
+
+/**
  * @return array<string, string>
  */
 function parseIcsProperties(string $block): array
 {
     $props = [];
     foreach (preg_split('/\r?\n/', $block) ?: [] as $line) {
-        if ($line === '' || !str_contains($line, ':')) {
+        if ($line === '') {
             continue;
         }
-        [$namePart, $value] = explode(':', $line, 2);
+        $parts = splitIcsContentLine($line);
+        if ($parts === null) {
+            continue;
+        }
+        [$namePart, $value] = $parts;
         $params = '';
         $name = $namePart;
         if (str_contains($namePart, ';')) {
@@ -388,10 +416,14 @@ function parseVcardVenue(string $vcard): ?array
     $props = [];
 
     foreach (preg_split('/\r?\n/', $vcard) ?: [] as $line) {
-        if ($line === '' || !str_contains($line, ':')) {
+        if ($line === '') {
             continue;
         }
-        [$namePart, $value] = explode(':', $line, 2);
+        $parts = splitIcsContentLine($line);
+        if ($parts === null) {
+            continue;
+        }
+        [$namePart, $value] = $parts;
         $name = strtoupper(explode(';', $namePart, 2)[0]);
         // Keep first FN/ORG/URL; ADR may appear once for venues
         if (!isset($props[$name]) || $name === 'ADR') {
