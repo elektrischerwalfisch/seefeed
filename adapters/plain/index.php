@@ -20,6 +20,7 @@ declare(strict_types=1);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seefeed</title>
     <link rel="stylesheet" href="../../core/css/seefeed.css">
+    <link rel="stylesheet" href="../../core/css/seefeed.theme.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>

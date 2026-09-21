@@ -1,0 +1,76 @@
+/**
+ * Seefeed demo theme – visual defaults for the plain adapter (and demos).
+ * Host sites typically omit this file and skin .event* with their own CSS.
+ *
+ * @file        core/css/seefeed.theme.css
+ * @project     Seefeed
+ * @author      Seefeed
+ * @version     0.1.0
+ * @since       2026-09
+ * @see         core/css/seefeed.css
+ */
+
+:root {
+    --base: #e4e2dc;
+    --contrast: #444;
+    --primary: #666;
+}
+
+.event {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--contrast);
+
+    .event-title {
+        margin: 0 0 0.25rem;
+        font-size: 1.1rem;
+    }
+
+    :is(
+        .event-categories,
+        .event-location,
+        .event-address,
+        .event-url,
+        .event-description,
+        .event-image
+    ) {
+        margin: 0.15rem 0;
+    }
+
+    .event-dates {
+        padding: 0.5rem 0.4rem;
+        color: var(--contrast);
+        background-color: var(--base);
+
+        .event-date-sep {
+            margin: 0.1em 0;
+            font-size: 1.7em;
+            line-height: 1;
+            opacity: 0.5;
+
+            &::before {
+                content: "▾";
+            }
+        }
+    }
+
+    .event-date {
+        font-weight: 600;
+        font-size: 1.6em;
+    }
+
+    .event-categories {
+        color: var(--primary);
+        font-size: 0.85rem;
+    }
+
+    .event-address {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+
+    .event-description {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+}

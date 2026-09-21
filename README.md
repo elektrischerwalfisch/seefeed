@@ -48,7 +48,7 @@ seefeed/
 ## Embed on a host site
 
 1. Ship or submodule this repository into the host (e.g. `vendor/seefeed`).
-2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css`.
+2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css` (structure). For the demo look, also load `core/css/seefeed.theme.css`; host sites usually skin events themselves instead.
 3. Place mounts such as `<section data-events data-filter="upcoming" data-template="teaser"></section>`.
 4. Include the matching templates (`core/templates/event-*.html`) or host copies.
 5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, …) or rely on defaults pointing at `data/`.
