@@ -268,6 +268,9 @@ function parseIcsEvents(string $ics): array
     }
 
     foreach ($blocks[1] as $block) {
+        // Drop nested VALARM components so alarm DESCRIPTION/SUMMARY do not
+        // overwrite the parent VEVENT fields (e.g. Mozilla default alarm text).
+        $block = preg_replace('/BEGIN:VALARM\r?\n.*?END:VALARM\r?\n?/s', '', $block) ?? $block;
         $props = parseIcsProperties($block);
         $startRaw = $props['DTSTART'] ?? '';
         $endRaw = $props['DTEND'] ?? '';
