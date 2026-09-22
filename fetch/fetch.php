@@ -16,7 +16,10 @@ declare(strict_types=1);
  * @since       2026-09
  * @see         fetch/config.example.php
  * @see         fetch/schema.php
+ * @see         fetch/ics-parser.php
  */
+
+require_once __DIR__ . '/ics-parser.php';
 
 // --- Bootstrap --------------------------------------------------------------
 // Load credentials from gitignored config.php; stop early if missing.
@@ -85,7 +88,6 @@ try {
         $schemaCount = SeefeedWriteEventsSchemaFile($dataDir, $schemaOptions);
         emitLine('Wrote events.schema.json (' . $schemaCount . ' events)');
     }
-    
 } catch (Throwable $e) {
     $detail = 'Fetch failed, existing JSON kept: ' . $e->getMessage();
     failExit($FETCH_DEBUG ? $detail : 'process failed', 1, 500);
@@ -250,165 +252,10 @@ function extractAddressData(string $multistatusXml): array
     return $cards;
 }
 
-// --- ICS --------------------------------------------------------------------
-// Map VEVENT fields to the frontend JSON shape. All-day DTEND is exclusive in
-// ICS; JSON stores the last exhibition day. ATTACH is kept as the full URI.
-// Events are sorted by start descending (newest first).
-
-/**
- * @return list<array<string, mixed>>
- */
-function parseIcsEvents(string $ics): array
-{
-    $ics = unfoldIcs($ics);
-    $events = [];
-
-    if (!preg_match_all('/BEGIN:VEVENT\r?\n(.*?)\r?\nEND:VEVENT/s', $ics, $blocks)) {
-        return $events;
-    }
-
-    foreach ($blocks[1] as $block) {
-        // Drop nested VALARM components so alarm DESCRIPTION/SUMMARY do not
-        // overwrite the parent VEVENT fields (e.g. Mozilla default alarm text).
-        $block = preg_replace('/BEGIN:VALARM\r?\n.*?END:VALARM\r?\n?/s', '', $block) ?? $block;
-        $props = parseIcsProperties($block);
-        $startRaw = $props['DTSTART'] ?? '';
-        $endRaw = $props['DTEND'] ?? '';
-        if ($startRaw === '') {
-            continue;
-        }
-
-        $start = icsDateToJson($startRaw, $props['DTSTART_PARAMS'] ?? '');
-        $end = $endRaw !== ''
-            ? icsDateToJson($endRaw, $props['DTEND_PARAMS'] ?? '')
-            : $start;
-
-        // All-day DTEND is exclusive in ICS → last exhibition day in JSON
-        $startAllDay = !str_contains($start, 'T');
-        $endAllDay = !str_contains($end, 'T');
-        if ($startAllDay && $endAllDay && $end !== '') {
-            $end = date('Y-m-d', strtotime($end . ' -1 day'));
-        }
-
-        $categories = [];
-        if (!empty($props['CATEGORIES'])) {
-            foreach (explode(',', $props['CATEGORIES']) as $cat) {
-                $cat = trim(unescapeIcsText($cat));
-                if ($cat !== '') {
-                    $categories[] = $cat;
-                }
-            }
-        }
-
-        $event = [
-            'summary' => unescapeIcsText($props['SUMMARY'] ?? ''),
-            'start' => $start,
-            'end' => $end,
-            'location' => unescapeIcsText($props['LOCATION'] ?? ''),
-            'categories' => $categories,
-            'description' => unescapeIcsText($props['DESCRIPTION'] ?? ''),
-        ];
-
-        $attach = $props['ATTACH'] ?? '';
-        if ($attach !== '') {
-            $event['attach'] = $attach;
-        }
-
-        $events[] = $event;
-    }
-
-    // Newest first (ISO start strings compare correctly for date and datetime)
-    usort($events, static fn(array $a, array $b): int => ($b['start'] ?? '') <=> ($a['start'] ?? ''));
-
-    return $events;
-}
-
-function unfoldIcs(string $ics): string
-{
-    return preg_replace("/\r?\n[ \t]/", '', $ics) ?? $ics;
-}
-
-/**
- * Split an unfolded ICS/vCard content line into name+params and value.
- * Colons inside quoted parameter values (e.g. ALTREP="data:text/html,...")
- * must not be treated as the name/value separator.
- *
- * @return array{0: string, 1: string}|null
- */
-function splitIcsContentLine(string $line): ?array
-{
-    $inQuotes = false;
-    $length = strlen($line);
-    for ($i = 0; $i < $length; $i++) {
-        $char = $line[$i];
-        if ($char === '"') {
-            $inQuotes = !$inQuotes;
-            continue;
-        }
-        if ($char === ':' && !$inQuotes) {
-            return [substr($line, 0, $i), substr($line, $i + 1)];
-        }
-    }
-    return null;
-}
-
-/**
- * @return array<string, string>
- */
-function parseIcsProperties(string $block): array
-{
-    $props = [];
-    foreach (preg_split('/\r?\n/', $block) ?: [] as $line) {
-        if ($line === '') {
-            continue;
-        }
-        $parts = splitIcsContentLine($line);
-        if ($parts === null) {
-            continue;
-        }
-        [$namePart, $value] = $parts;
-        $params = '';
-        $name = $namePart;
-        if (str_contains($namePart, ';')) {
-            [$name, $params] = explode(';', $namePart, 2);
-        }
-        $name = strtoupper($name);
-        $props[$name] = $value;
-        $props[$name . '_PARAMS'] = $params;
-    }
-    return $props;
-}
-
-function icsDateToJson(string $value, string $params): string
-{
-    $isDate = str_contains(strtoupper($params), 'VALUE=DATE')
-        || (strlen($value) === 8 && !str_contains($value, 'T'));
-
-    if ($isDate) {
-        return substr($value, 0, 4) . '-' . substr($value, 4, 2) . '-' . substr($value, 6, 2);
-    }
-
-    // 20260620T180000 or 20260620T180000Z
-    $value = rtrim($value, 'Z');
-    if (preg_match('/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/', $value, $m)) {
-        return $m[1] . '-' . $m[2] . '-' . $m[3] . 'T' . $m[4] . ':' . $m[5] . ':' . $m[6];
-    }
-
-    return $value;
-}
-
-function unescapeIcsText(string $value): string
-{
-    return str_replace(
-        ['\\\\', '\\;', '\\,', '\\n', '\\N'],
-        ['\\', ';', ',', "\n", "\n"],
-        $value
-    );
-}
-
 // --- vCard ------------------------------------------------------------------
 // Map organisation contacts (FN, ORG, ADR, URL) to venues.json entries.
 // Lookup key on the website is Event.location === Venue.fn.
+// Line helpers (unfoldIcs, splitIcsContentLine, unescapeIcsText) come from ics-parser.php.
 
 /**
  * @return array<string, string>|null

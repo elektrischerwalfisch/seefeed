@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+PRODID:-//Seefeed//Fixture//EN
+CALSCALE:GREGORIAN
+VERSION:2.0
+BEGIN:VEVENT
+UID:fixture-single-event@seefeed.test
+DTSTAMP:20250319T120000Z
+SUMMARY:Openscreening
+ATTACH:http://www.openscreening.de/
+DTSTART;TZID=Europe/Berlin:20250319T203000
+DTEND;TZID=Europe/Berlin:20250319T230000
+LOCATION:Kinobar im Kino Sputnik
+DESCRIPTION:Einlass & Filmabgabe 19:30 h\n\nFilm ab 20:30
+END:VEVENT
+END:VCALENDAR
