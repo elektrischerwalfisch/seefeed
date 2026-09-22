@@ -61,7 +61,10 @@ emitAlways('process started');
 try {
     // 1) Calendar → events.json (CalDAV export is plain ICS)
     $ics = httpGet(calendarExportUrl($config['calendar_url']), $config['nc_user'], $config['nc_app_password']);
-    $events = parseIcsEvents($ics);
+    $events = parseIcsEvents($ics, [
+        'past_months' => (int) ($config['rrule_horizon_past_months'] ?? RRULE_HORIZON_PAST_MONTHS),
+        'future_months' => (int) ($config['rrule_horizon_future_months'] ?? RRULE_HORIZON_FUTURE_MONTHS),
+    ]);
     writeJsonAtomic($dataDir . '/events.json', ['events' => $events]);
     emitLine('Wrote events.json (' . count($events) . ' events)');
 

@@ -15,6 +15,8 @@
  *   schema_event_type         Schema.org @type (default "Event"; e.g. "ExhibitionEvent")
  *   schema_event_image_base   Optional image URL prefix for JSON-LD (ATTACH basenames).
  *                             Separate from frontend window.Seefeed.eventImageBase.
+ *   rrule_horizon_past_months   Months before now when expanding RRULE (default 3).
+ *   rrule_horizon_future_months Months after now when expanding RRULE (default 6).
  *
  * @file        fetch/config.example.php
  * @project     Seefeed
@@ -23,6 +25,7 @@
  * @since       2026-09
  * @see         fetch/fetch.php
  * @see         fetch/schema.php
+ * @see         fetch/ics-parser.php
  */
 declare(strict_types=1);
 
@@ -37,4 +40,6 @@ return [
     'schema_filter' => 'upcoming',
     'schema_event_type' => 'Event',
     'schema_event_image_base' => '',
+    'rrule_horizon_past_months' => 3,
+    'rrule_horizon_future_months' => 6,
 ];
