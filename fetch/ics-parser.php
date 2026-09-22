@@ -68,7 +68,7 @@ function parseIcsEventsInternal(string $ics): array
 /**
  * Expand masters with a supported RRULE into occurrences inside the horizon.
  * Unsupported RRULEs stay as a single event (with a CLI warning).
- * EXDATE / RECURRENCE-ID overrides are applied in a later step.
+ * EXDATE skips series slots; RECURRENCE-ID overrides replace the matching slot.
  *
  * @param list<array<string, mixed>> $events
  * @param array{
@@ -81,39 +81,105 @@ function parseIcsEventsInternal(string $ics): array
 function expandIcsRecurringEvents(array $events, array $options = []): array
 {
     [$windowStart, $windowEnd] = rruleHorizonWindow($options);
-    $out = [];
+
+    $plain = [];
+    $masters = [];
+    /** @var list<array<string, mixed>> $exceptions */
+    $exceptions = [];
 
     foreach ($events as $event) {
         $rrule = (string) ($event['_ics']['rrule'] ?? '');
         $recurrenceId = (string) ($event['_ics']['recurrence_id'] ?? '');
 
-        // Exception instances and non-series events stay 1:1 (overrides: step 3).
-        if ($rrule === '' || $recurrenceId !== '') {
-            $out[] = $event;
+        if ($recurrenceId !== '') {
+            $exceptions[] = $event;
             continue;
         }
+        if ($rrule !== '') {
+            $masters[] = $event;
+            continue;
+        }
+        $plain[] = $event;
+    }
 
-        $rule = parseRruleParts($rrule);
+    /** @var array<string, true> $overrideKeys uid|recurrence_id */
+    $overrideKeys = [];
+    foreach ($exceptions as $exception) {
+        $uid = (string) ($exception['_ics']['uid'] ?? '');
+        $rid = (string) ($exception['_ics']['recurrence_id'] ?? '');
+        if ($uid !== '' && $rid !== '') {
+            $overrideKeys[$uid . '|' . $rid] = true;
+        }
+    }
+
+    $out = $plain;
+
+    foreach ($masters as $master) {
+        $rule = parseRruleParts((string) ($master['_ics']['rrule'] ?? ''));
         if ($rule === null) {
-            icsParserWarn('Unsupported RRULE, keeping single event: ' . $rrule);
-            $out[] = $event;
+            icsParserWarn('Unsupported RRULE, keeping single event: ' . ($master['_ics']['rrule'] ?? ''));
+            $out[] = $master;
             continue;
         }
 
-        $starts = generateRruleOccurrenceStarts($event, $rule, $windowStart, $windowEnd);
+        $starts = generateRruleOccurrenceStarts($master, $rule, $windowStart, $windowEnd);
         if ($starts === []) {
-            // Series exists but nothing falls in the horizon — omit master shell.
             continue;
         }
 
+        $uid = (string) ($master['_ics']['uid'] ?? '');
+        $exdateSet = [];
+        foreach ($master['_ics']['exdates'] ?? [] as $exdate) {
+            if (is_string($exdate) && $exdate !== '') {
+                $exdateSet[$exdate] = true;
+            }
+        }
+
+        $allDay = !str_contains((string) ($master['start'] ?? ''), 'T');
         foreach ($starts as $occStart) {
-            $out[] = occurrenceFromMaster($event, $occStart);
+            $startJson = dateTimeToJson($occStart, $allDay);
+            if (isset($exdateSet[$startJson])) {
+                continue;
+            }
+            if ($uid !== '' && isset($overrideKeys[$uid . '|' . $startJson])) {
+                continue;
+            }
+            $out[] = occurrenceFromMaster($master, $occStart);
+        }
+    }
+
+    foreach ($exceptions as $exception) {
+        if (eventTouchesRruleHorizon($exception, $windowStart, $windowEnd)) {
+            $out[] = $exception;
         }
     }
 
     usort($out, static fn(array $a, array $b): int => ($b['start'] ?? '') <=> ($a['start'] ?? ''));
 
     return $out;
+}
+
+/**
+ * True if event start or RECURRENCE-ID falls inside the expansion horizon.
+ *
+ * @param array<string, mixed> $event
+ */
+function eventTouchesRruleHorizon(
+    array $event,
+    DateTimeImmutable $windowStart,
+    DateTimeImmutable $windowEnd
+): bool {
+    $start = jsonDateToDateTime((string) ($event['start'] ?? ''));
+    if ($start !== null && $start >= $windowStart && $start <= $windowEnd) {
+        return true;
+    }
+
+    $rid = (string) ($event['_ics']['recurrence_id'] ?? '');
+    if ($rid === '') {
+        return false;
+    }
+    $ridDt = jsonDateToDateTime($rid);
+    return $ridDt !== null && $ridDt >= $windowStart && $ridDt <= $windowEnd;
 }
 
 /**
