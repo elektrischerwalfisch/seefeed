@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- docs: Document RRULE expansion and horizon config in the README
 - feat: Apply EXDATE skips and RECURRENCE-ID overrides when expanding RRULE series
 - feat: Expand WEEKLY and MONTHLY RRULE series within a configurable horizon
 - refactor: Extract ICS parser with recurrence metadata and fixture test CLI

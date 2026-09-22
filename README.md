@@ -22,6 +22,7 @@ curl -fsS "https://www.example.com/path/to/seefeed/fetch/fetch.php?token=YOUR_FE
 
 `fetch/config.php` is gitignored. Web calls without a valid `fetch_token` return 403. `config.php` is blocked via `.htaccess`. On success the script writes `data/events.json` and `data/venues.json` atomically (on failure, previous files are kept). Optional `write_schema => true` also writes `data/events.schema.json` (Schema.org JSON-LD).
 
+Recurring events (`RRULE` with `FREQ=WEEKLY` or `MONTHLY`, plus `EXDATE` / `RECURRENCE-ID`) are expanded into concrete occurrences within a configurable horizon (defaults: 3 months past, 6 months future; keys `rrule_horizon_past_months` / `rrule_horizon_future_months` in config). The JSON stays a flat event list.
 `data/` is runtime-only (gitignored except `.gitkeep`). `demo-data/` is versioned demo content and is never written by fetch.
 
 Local Docker: make `data/` writable for the web server user (often `www-data`):
