@@ -3,17 +3,6 @@
         <article class="event">
             <h3 class="event-title"></h3>
             <p class="event-dates">
-                <!--
-                  Optional date parts (same dateLocale/dateDisplay as .event-date):
-                  <time class="event-start" datetime="">
-                    <span class="event-daymonth">
-                      <span class="event-day"></span>
-                      <span class="event-month"></span>
-                    </span>
-                    <span class="event-year"></span>
-                    <span class="event-time"></span>
-                  </time>
-                -->
                 <time class="event-start" datetime="">
                     <span class="event-date"></span>
                     <span class="event-time"></span>
@@ -24,7 +13,16 @@
                     <span class="event-time"></span>
                 </time>
             </p>
-            <p class="event-location"></p>
+            <div class="event-main"> 
+              <p class="event-location"></p>
+              <details class="event-more">
+                  <summary>Read more</summary>
+                  <p class="event-address"></p>
+                  <p class="event-url"></p>
+                  <p class="event-description"></p>
+                  <p class="event-image"></p>
+              </details>
+            </div>
         </article>
     </li>
 </template>

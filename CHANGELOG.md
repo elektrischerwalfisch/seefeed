@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Add date-part grid layout, stacked teaser cards, and demo theme
 - feat: Add optional day, month, and year slots for event date templates
 
 ## 0.1.0 - 2026-09-23

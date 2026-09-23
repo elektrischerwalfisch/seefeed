@@ -15,7 +15,10 @@
     --primary: #666;
     --surface: #fff;
     --canvas: #f7f5f1;
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-dates: "Barlow Condensed", "Inter", system-ui, sans-serif;
 }
+
 
 *,
 :is(*::before, *::after) {
@@ -30,7 +33,7 @@ body {
     background:
         radial-gradient(ellipse 80% 50% at 50% -10%, var(--base) 0%, transparent 55%),
         var(--canvas);
-    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -43,10 +46,10 @@ body {
     h1 {
         margin: 0 0 1.25rem;
         color: var(--contrast);
-        font-family: Georgia, "Times New Roman", serif;
+        font-family: var(--font-sans);
         font-size: 1.85rem;
-        font-weight: 400;
-        letter-spacing: 0.02em;
+        font-weight: 600;
+        letter-spacing: -0.02em;
         text-align: center;
     }
 

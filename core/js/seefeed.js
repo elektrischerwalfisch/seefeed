@@ -29,7 +29,7 @@ const dateDisplay = cfg.dateDisplay || {
     timeZone: "UTC",
     day: "2-digit",
     month: "2-digit",
-    year: "2-digit",
+    year: "numeric",
 };
 const timeDisplay = cfg.timeDisplay || {
     // hour: "numeric" (9) | "2-digit" (09)

@@ -19,11 +19,12 @@
 
 .event {
     display: grid;
-    grid-template-columns: 7.5rem 1fr;
+    grid-template-columns: 9rem 1fr;
     grid-template-areas:
         "dates title"
         "dates categories"
         "dates location"
+        "dates more"
         "dates address"
         "dates url"
         "dates description"
@@ -51,6 +52,41 @@
         .event-date-sep:not([hidden]) {
             display: block;
         }
+
+        /*
+         * Part slots as direct children of <time>:
+         *   time  time
+         *   day   month
+         *   year  year
+         */
+        :is(.event-start, .event-end):has(> .event-day) {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-template-areas:
+                "time time"
+                "day month"
+                "year year";
+            justify-items: center;
+            align-items: baseline;
+            column-gap: 0.15em;
+            row-gap: 0;
+        }
+
+        .event-day {
+            grid-area: day;
+        }
+
+        .event-month {
+            grid-area: month;
+        }
+
+        .event-year {
+            grid-area: year;
+        }
+
+        .event-time {
+            grid-area: time;
+        }
     }
 
     :is(.event-date, .event-time) {
@@ -59,6 +95,10 @@
         &:empty {
             display: none;
         }
+    }
+
+    :is(.event-day, .event-month, .event-year):empty {
+        display: none;
     }
 
     .event-categories {
@@ -70,8 +110,16 @@
         list-style: none;
     }
 
+    .event-main > *{
+        grid-area: location;
+    }
+
     .event-location {
         grid-area: location;
+    }
+
+    .event-more {
+        grid-area: more;
     }
 
     .event-address {
@@ -100,9 +148,14 @@
         .event-categories,
         .event-address,
         .event-url,
+        .event-location,
         .event-description,
         .event-image
     ):empty {
         display: none;
+    }
+
+    summary {
+        cursor: pointer;
     }
 }

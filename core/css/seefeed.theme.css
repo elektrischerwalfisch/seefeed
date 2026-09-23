@@ -2,6 +2,9 @@
  * Seefeed demo theme – visual defaults for the plain adapter (and demos).
  * Host sites typically omit this file and skin .event* with their own CSS.
  *
+ * Typography (variant C): Inter for UI text; Barlow Condensed only on .event-dates.
+ * Hosts that load fonts themselves can override --font-sans / --font-dates.
+ *
  * @file        core/css/seefeed.theme.css
  * @project     Seefeed
  * @author      Seefeed
@@ -14,12 +17,15 @@
     --base: #e4e2dc;
     --contrast: #444;
     --primary: #666;
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-dates: "Barlow Condensed", "Inter", system-ui, sans-serif;
 }
 
 .event {
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--contrast);
+    font-family: var(--font-sans);
 
     .event-title {
         margin: 0 0 0.25rem;
@@ -36,14 +42,29 @@
     ) {
         margin: 0.15rem 0;
     }
-
+    .event-categories li {
+        background-color: var(--primary);
+        color: var(--base);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .event-time {
+        font-size: 1.2em;
+        line-height: 1.2;
+    }
+    .event-year {
+        font-size: 1.2em;
+        line-height: 1.7;
+    }
     .event-dates {
+        font-family: var(--font-dates);
         padding: 0.5rem 0.4rem;
         color: var(--contrast);
         background-color: var(--base);
 
         .event-date-sep {
-            margin: 0.1em 0;
+            margin: 0 0 0.2em 0;
             font-size: 1.7em;
             line-height: 1;
             opacity: 0.5;
@@ -56,7 +77,17 @@
 
     .event-date {
         font-weight: 600;
-        font-size: 1.6em;
+        font-size: 2em;
+        line-height: 1.2;
+    }
+
+    :is(.event-day, .event-month) {
+        font-size: 3em;
+        line-height: 1;
+    }
+
+    :is(.event-day, .event-month):after {
+        content: ".";
     }
 
     .event-categories {
@@ -73,4 +104,14 @@
         color: var(--primary);
         font-size: 0.9rem;
     }
+}
+
+.eventlist > li:last-child .event {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+[data-template="full"] .event .event-dates .event-date-sep::before {
+    content: "--- ▾ ---";
 }
