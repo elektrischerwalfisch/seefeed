@@ -22,20 +22,12 @@ const eventsUrl = cfg.eventsUrl || "../../data/events.json";
 const venuesUrl = cfg.venuesUrl || "../../data/venues.json";
 const dateLocale = cfg.dateLocale || "de-DE";
 const dateDisplay = cfg.dateDisplay || {
-    // timeZone: "UTC" (no shift for date-only) | "Europe/Berlin" | … (IANA); omit = browser local
-    // day: "numeric" (5) | "2-digit" (05)
-    // month: "numeric" (1) | "2-digit" (01) | "long" (Januar) | "short" (Jan.) | "narrow" (J)
-    // year: "numeric" (2026) | "2-digit" (26)
     timeZone: "UTC",
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
 };
 const timeDisplay = cfg.timeDisplay || {
-    // hour: "numeric" (9) | "2-digit" (09)
-    // minute: "numeric" (5) | "2-digit" (05)
-    // second: "numeric" (7) | "2-digit" (07) (optional)
-    // hour12: true (9:05 AM) | false (09:05) (optional; omit = locale default)
     hour: "2-digit",
     minute: "2-digit",
 };
@@ -78,16 +70,27 @@ const loadJson = (url, onSuccess) => {
 const datePart = (isoDate) => isoDate.slice(0, 10);
 const hasTime = (isoDate) => isoDate.includes("T");
 
-// Date-only: full dateDisplay (incl. timeZone). Timed: day/month/year only (browser local TZ).
+// Date-only: day/month/year + optional timeZone. Timed: day/month/year only (browser local TZ).
+// Never include weekday here — that would change .event-date via formatDay.
 const dateDisplayOptions = (isoDate) => {
-    if (!hasTime(isoDate)) {
-        return dateDisplay;
-    }
-    return {
+    const options = {
         day: dateDisplay.day,
         month: dateDisplay.month,
         year: dateDisplay.year,
     };
+    if (!hasTime(isoDate) && dateDisplay.timeZone) {
+        options.timeZone = dateDisplay.timeZone;
+    }
+    return options;
+};
+
+// Same as dateDisplayOptions, plus weekday when set (for formatToParts / .event-weekday only)
+const datePartsOptions = (isoDate) => {
+    const options = dateDisplayOptions(isoDate);
+    if (dateDisplay.weekday) {
+        options.weekday = dateDisplay.weekday;
+    }
+    return options;
 };
 
 const formatDay = (isoDate) => {
@@ -95,16 +98,21 @@ const formatDay = (isoDate) => {
     return date.toLocaleDateString(dateLocale, dateDisplayOptions(isoDate));
 };
 
-// Optional template slots .event-day / .event-month / .event-year (same options as formatDay)
+// Optional slots .event-day / .event-month / .event-year / .event-weekday
 const formatDayParts = (isoDate) => {
     const date = new Date(isoDate);
     const parts = new Intl.DateTimeFormat(
         dateLocale,
-        dateDisplayOptions(isoDate)
+        datePartsOptions(isoDate)
     ).formatToParts(date);
-    const result = { day: "", month: "", year: "" };
+    const result = { day: "", month: "", year: "", weekday: "" };
     parts.forEach((part) => {
-        if (part.type === "day" || part.type === "month" || part.type === "year") {
+        if (
+            part.type === "day" ||
+            part.type === "month" ||
+            part.type === "year" ||
+            part.type === "weekday"
+        ) {
             result[part.type] = part.value;
         }
     });
@@ -160,7 +168,7 @@ const fillImage = (root, selector, attach, altText) => {
     el.appendChild(img);
 };
 
-// Fill one <time>: ISO on datetime; .event-date and optional day/month/year; .event-time
+// Fill one <time>: ISO on datetime; .event-date and optional day/month/year/weekday; .event-time
 const fillInstant = (timeEl, isoDate, showDate, showTime) => {
     if (!timeEl) {
         return;
@@ -169,10 +177,11 @@ const fillInstant = (timeEl, isoDate, showDate, showTime) => {
     fillText(timeEl, ".event-date", showDate ? formatDay(isoDate) : "");
     const dayParts = showDate
         ? formatDayParts(isoDate)
-        : { day: "", month: "", year: "" };
+        : { day: "", month: "", year: "", weekday: "" };
     fillText(timeEl, ".event-day", dayParts.day);
     fillText(timeEl, ".event-month", dayParts.month);
     fillText(timeEl, ".event-year", dayParts.year);
+    fillText(timeEl, ".event-weekday", dayParts.weekday);
     fillText(timeEl, ".event-time", showTime ? formatTime(isoDate) : "");
 };
 

@@ -59,59 +59,36 @@ See `adapters/plain/index.php` for a minimal working example.
 
 ## Templates
 
-Core templates use class hooks filled by `core/js/seefeed.js`. Missing slots are skipped.
+Core templates use class hooks filled by `core/js/seefeed.js`. Missing slots are skipped. Layout and slot markup live in `core/css/seefeed.css` and `core/templates/`; this section only notes behaviour that is not obvious from those files.
 
 ### Event card layout
 
-Structure CSS (`.event`) uses a two-column grid: date column | content column.
+Structure CSS (`.event`) uses a two-column grid: date column | content column. Direct children of `.event` (location, address, URL, …) each get a grid row. Wrap stacked body content in `.event-main` (see `event-teaser.html`) so children share one row — structure CSS sets `grid-area` on `.event-main > *`.
 
-| Selector                                                                                                 | Role                                                                               |
-| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `.event-dates`                                                                                           | Date column (`grid-area: dates`)                                                   |
-| `.event-title`                                                                                           | Title row                                                                          |
-| `.event-categories`                                                                                      | Optional categories row                                                            |
-| `.event-location` / `.event-more` / `.event-address` / `.event-url` / `.event-description` / `.event-image` | Content rows when used as **direct children** of `.event`                          |
-| `.event-main`                                                                                            | Optional wrapper for stacked body content (markup only; not filled by JS)          |
-| `.event-more`                                                                                            | Optional `<details>` for “read more” (address, URL, description, image)            |
-
-Two host patterns (see the core templates):
-
-- **Flat** (`event-full.html`): location, address, URL, description, and image as direct children of `.event` — each gets its own grid row.
-- **Stacked** (`event-teaser.html`): wrap location and optional `.event-more` in `.event-main` so they stay tight; structure CSS overrides `grid-area` on `.event-main > *` so those children do not each take a separate `.event` row.
+| Selector                                                                                                   | Role                                                                      |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `.event-dates`                                                                                             | Date column (`grid-area: dates`)                                          |
+| `.event-title`                                                                                             | Title row                                                                 |
+| `.event-categories`                                                                                        | Optional categories row                                                   |
+| `.event-location` / `.event-more` / `.event-address` / `.event-url` / `.event-description` / `.event-image` | Content rows when used as **direct children** of `.event`                 |
+| `.event-main`                                                                                              | Optional wrapper for stacked body content (markup only; not filled by JS) |
+| `.event-more`                                                                                              | Optional `<details>` for “read more” (address, URL, description, image)   |
 
 ### Date and time slots
 
-Date/time inside each `<time class="event-start|event-end">`:
+Filled inside each `<time class="event-start|event-end">`:
 
-| Selector           | Role                                                               |
-| ------------------ | ------------------------------------------------------------------ |
-| `.event-date`      | Full localized date (default in core templates)                    |
-| `.event-time`      | Clock time (+ optional `timeSuffix`)                               |
-| `.event-day`       | Optional day part only                                             |
-| `.event-month`     | Optional month part only                                           |
-| `.event-year`      | Optional year part only                                            |
-| `.event-daymonth`  | Optional wrapper for day+month (markup/CSS only; not filled by JS) |
+| Selector          | Role                                                               |
+| ----------------- | ------------------------------------------------------------------ |
+| `.event-date`     | Full localized date (e.g. teaser template)                         |
+| `.event-time`     | Clock time (+ optional `timeSuffix`)                               |
+| `.event-day`      | Optional day part only                                             |
+| `.event-month`    | Optional month part only                                           |
+| `.event-year`     | Optional year part only                                            |
+| `.event-weekday`  | Optional weekday (`Mo` / `Montag`); needs `dateDisplay.weekday`    |
+| `.event-daymonth` | Optional wrapper for day+month (markup/CSS only; not filled by JS) |
 
-Parts use the same `dateLocale` / `dateDisplay` options as `.event-date`. Hosts that only need a single date string keep `.event-date` and omit the part slots.
-
-When `.event-day` is a **direct child** of `<time>`, structure CSS lays out:
-
-```text
-time  time
-day   month
-year  year
-```
-
-Example (part grid; no `.event-date` needed):
-
-```html
-<time class="event-start" datetime="">
-  <span class="event-day"></span>
-  <span class="event-month"></span>
-  <span class="event-year"></span>
-  <span class="event-time"></span>
-</time>
-```
+Day/month/year parts use the same `dateLocale` and day/month/year/`timeZone` from `dateDisplay` as `.event-date`. Set `dateDisplay.weekday` to `"narrow"` | `"short"` | `"long"` to fill `.event-weekday`; it is **not** added to `.event-date`. Hosts that only need a single date string keep `.event-date` and omit the part slots.
 
 ## License / status
 

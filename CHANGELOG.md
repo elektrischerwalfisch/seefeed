@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Add optional weekday slot for event date templates
 - feat: Add date-part grid layout, stacked teaser cards, and demo theme
 - feat: Add optional day, month, and year slots for event date templates
 

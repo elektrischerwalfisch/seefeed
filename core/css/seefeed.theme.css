@@ -57,6 +57,10 @@
         font-size: 1.2em;
         line-height: 1.7;
     }
+    .event-weekday {
+        font-size: 1.2em;
+        line-height: 1.5;
+    }
     .event-dates {
         font-family: var(--font-dates);
         padding: 0.5rem 0.4rem;

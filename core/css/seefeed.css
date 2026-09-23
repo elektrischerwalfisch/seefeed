@@ -55,7 +55,7 @@
 
         /*
          * Part slots as direct children of <time>:
-         *   time  time
+         *   time  weekday   (or weekday spanning both when time is empty)
          *   day   month
          *   year  year
          */
@@ -63,13 +63,25 @@
             display: grid;
             grid-template-columns: auto auto;
             grid-template-areas:
-                "time time"
+                "time weekday"
                 "day month"
                 "year year";
             justify-items: center;
             align-items: baseline;
             column-gap: 0.15em;
             row-gap: 0;
+        }
+
+        /* No clock time: center weekday across both columns */
+        :is(.event-start, .event-end):has(> .event-day):not(:has(> .event-time:not(:empty))) {
+            grid-template-areas:
+                "weekday weekday"
+                "day month"
+                "year year";
+        }
+
+        .event-weekday {
+            grid-area: weekday;
         }
 
         .event-day {
@@ -97,7 +109,7 @@
         }
     }
 
-    :is(.event-day, .event-month, .event-year):empty {
+    :is(.event-day, .event-month, .event-year, .event-weekday):empty {
         display: none;
     }
 

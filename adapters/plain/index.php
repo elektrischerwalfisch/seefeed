@@ -48,11 +48,27 @@ declare(strict_types=1);
         <script>
             window.Seefeed = {
                 eventsUrl: "../../demo-data/events.json",
-                venuesUrl: "../../demo-data/venues.json"
+                venuesUrl: "../../demo-data/venues.json",
+                dateDisplay: {
+                    timeZone: "UTC",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    weekday: "long",
+                },
+                timeSuffix: "h",
                 // Optional overrides (omit = core defaults):
                 // dateLocale: "de-DE"
-                // dateDisplay: { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" }
-                // timeDisplay: { hour: "2-digit", minute: "2-digit" }
+                // dateDisplay:
+                //   timeZone: "UTC" | "Europe/Berlin" | … (IANA); omit = browser local
+                //     (applied for date-only events; timed events use browser local TZ)
+                //   day: "numeric" | "2-digit"
+                //   month: "numeric" | "2-digit" | "long" | "short" | "narrow"
+                //   year: "numeric" | "2-digit"
+                //   weekday: "narrow" | "short" | "long" — .event-weekday only (not .event-date)
+                // timeDisplay:
+                //   hour / minute / second: "numeric" | "2-digit" (second optional)
+                //   hour12: true | false (optional; omit = locale default)
                 // timeSuffix: " Uhr"          // empty string = no suffix
                 // eventImageBase: ""          // empty = use ATTACH URI as-is; omit = <events-dir>/img/
                 // latestCount: 3
