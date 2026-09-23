@@ -78,16 +78,37 @@ const loadJson = (url, onSuccess) => {
 const datePart = (isoDate) => isoDate.slice(0, 10);
 const hasTime = (isoDate) => isoDate.includes("T");
 
-const formatDay = (isoDate) => {
-    const date = new Date(isoDate);
+// Date-only: full dateDisplay (incl. timeZone). Timed: day/month/year only (browser local TZ).
+const dateDisplayOptions = (isoDate) => {
     if (!hasTime(isoDate)) {
-        return date.toLocaleDateString(dateLocale, dateDisplay);
+        return dateDisplay;
     }
-    return date.toLocaleDateString(dateLocale, {
+    return {
         day: dateDisplay.day,
         month: dateDisplay.month,
         year: dateDisplay.year,
+    };
+};
+
+const formatDay = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString(dateLocale, dateDisplayOptions(isoDate));
+};
+
+// Optional template slots .event-day / .event-month / .event-year (same options as formatDay)
+const formatDayParts = (isoDate) => {
+    const date = new Date(isoDate);
+    const parts = new Intl.DateTimeFormat(
+        dateLocale,
+        dateDisplayOptions(isoDate)
+    ).formatToParts(date);
+    const result = { day: "", month: "", year: "" };
+    parts.forEach((part) => {
+        if (part.type === "day" || part.type === "month" || part.type === "year") {
+            result[part.type] = part.value;
+        }
     });
+    return result;
 };
 
 // Clock time in de-DE (HH:MM) plus suffix (Uhr) which is added by + timeSuffix;
@@ -139,13 +160,19 @@ const fillImage = (root, selector, attach, altText) => {
     el.appendChild(img);
 };
 
-// Fill one <time>: ISO on datetime, date and time in separate spans (empty span is hidden)
+// Fill one <time>: ISO on datetime; .event-date and optional day/month/year; .event-time
 const fillInstant = (timeEl, isoDate, showDate, showTime) => {
     if (!timeEl) {
         return;
     }
     timeEl.dateTime = isoDate;
     fillText(timeEl, ".event-date", showDate ? formatDay(isoDate) : "");
+    const dayParts = showDate
+        ? formatDayParts(isoDate)
+        : { day: "", month: "", year: "" };
+    fillText(timeEl, ".event-day", dayParts.day);
+    fillText(timeEl, ".event-month", dayParts.month);
+    fillText(timeEl, ".event-year", dayParts.year);
     fillText(timeEl, ".event-time", showTime ? formatTime(isoDate) : "");
 };
 

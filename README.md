@@ -57,6 +57,36 @@ seefeed/
 
 See `adapters/plain/index.php` for a minimal working example.
 
+## Templates
+
+Core templates use class hooks filled by `core/js/seefeed.js`. Missing slots are skipped.
+
+Date/time inside each `<time class="event-start|event-end">`:
+
+| Selector           | Role                                                              |
+| ------------------ | ----------------------------------------------------------------- |
+| `.event-date`      | Full localized date (default in core templates)                   |
+| `.event-time`      | Clock time (+ optional `timeSuffix`)                              |
+| `.event-day`       | Optional day part only                                            |
+| `.event-month`     | Optional month part only                                          |
+| `.event-year`      | Optional year part only                                           |
+| `.event-daymonth`  | Optional wrapper for day+month (markup/CSS only; not filled by JS) |
+
+Parts use the same `dateLocale` / `dateDisplay` options as `.event-date`. Hosts that only need a single date string keep `.event-date` and omit the part slots.
+
+Example (host template; replace or accompany `.event-date` as needed):
+
+```html
+<time class="event-start" datetime="">
+  <span class="event-daymonth">
+    <span class="event-day"></span>
+    <span class="event-month"></span>
+  </span>
+  <span class="event-year"></span>
+  <span class="event-time"></span>
+</time>
+```
+
 ## License / status
 
 Work in progress. Adjust hosting paths and credentials per environment; never commit `fetch/config.php` or `.env`.
