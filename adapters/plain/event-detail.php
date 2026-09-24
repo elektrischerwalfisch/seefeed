@@ -1,10 +1,12 @@
 <?php
 /**
- * Seefeed plain adapter – demo list page (mounts + shared boot).
+ * Seefeed plain adapter – event detail demo page (Variante A).
  *
- * @file        adapters/plain/index.php
+ * Open with ?event=<id> (e.g. demo-evening-talk@seefeed.local).
+ *
+ * @file        adapters/plain/event-detail.php
  * @project     Seefeed
- * @see         adapters/plain/event-detail.php
+ * @see         adapters/plain/index.php
  * @see         adapters/plain/include-seefeed.php
  */
 declare(strict_types=1);
@@ -14,7 +16,7 @@ declare(strict_types=1);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seefeed</title>
+    <title>Seefeed – Event</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap">
@@ -26,16 +28,11 @@ declare(strict_types=1);
 
     <div id="wrapper">
 
-        <h1>Seefeed</h1>
+        <h1>Seefeed – Event</h1>
+        <p><a href="./index.php">← Liste</a></p>
 
         <div class="panel">
-            <h2>First 3 Events</h2>
-            <section data-events data-filter="latest" data-template="full"></section>
-        </div>
-
-        <div class="panel">
-            <h2>All Events</h2>
-            <section data-events data-filter="all" data-template="teaser"></section>
+            <section data-event-detail data-template="detail"></section>
         </div>
 
         <?php require __DIR__ . '/include-seefeed.php'; ?>

@@ -1,15 +1,17 @@
 /**
- * Seefeed – render calendar events from JSON into [data-events] mounts.
+ * Seefeed – render calendar events from JSON into [data-events] /
+ * [data-event-detail] mounts.
  *
- * Loads events/venues via XHR, filters (upcoming|past|all|latest), fills HTML
- * <template> clones. Options: window.Seefeed before this script loads.
+ * Loads events/venues via XHR, filters list mounts (upcoming|past|all|latest),
+ * fills HTML <template> clones. Detail mounts read ?event=<id> (configurable).
+ * Options: window.Seefeed before this script loads.
  *
  * @file        core/js/seefeed.js
  * @project     Seefeed
  * @author      Seefeed
  * @version     0.1.0
  * @since       2026-09
- * @requires    DOM with [data-events] mounts and #event-{name} templates
+ * @requires    DOM with mounts and #event-{name} templates
  * @see         adapters/plain/index.php (demo config)
  */
 
@@ -41,9 +43,24 @@ const eventImageBase =
 // data-template: short name → template id "event-{name}" (default "full"; PHP includes fragments)
 const latestCount = cfg.latestCount !== undefined ? cfg.latestCount : 3;
 const upcomingCount = cfg.upcomingCount !== undefined ? cfg.upcomingCount : 3;
+// Detail URL query key (Variante A): ?event=<id>
+const eventIdParam = cfg.eventIdParam || "event";
+// Base URL for list → detail permalinks (omit = do not fill .event-permalink)
+const eventDetailUrl =
+    cfg.eventDetailUrl !== undefined ? cfg.eventDetailUrl : "";
 
 // --- DOM --------------------------------------------------------------------
-const mounts = document.querySelectorAll("[data-events]");
+const listMounts = document.querySelectorAll("[data-events]");
+const detailMounts = document.querySelectorAll("[data-event-detail]");
+
+const setMountError = (message) => {
+    listMounts.forEach((mount) => {
+        mount.textContent = message;
+    });
+    detailMounts.forEach((mount) => {
+        mount.textContent = message;
+    });
+};
 
 // --- Load JSON --------------------------------------------------------------
 const loadJson = (url, onSuccess) => {
@@ -51,9 +68,7 @@ const loadJson = (url, onSuccess) => {
 
     xhr.onload = function () {
         if (xhr.status != 200) {
-            mounts.forEach((mount) => {
-                mount.textContent = "Fehler beim Laden der Daten";
-            });
+            setMountError("Fehler beim Laden der Daten");
             return;
         }
 
@@ -249,6 +264,38 @@ const fillCategories = (clone, categories) => {
     });
 };
 
+// Shared field fill for list items and detail view
+const fillEventIntoRoot = (root, eventItem, venuesByFn) => {
+    const venue = venuesByFn[eventItem.location];
+
+    fillText(root, ".event-title", eventItem.summary);
+    fillDateRange(root, eventItem.start, eventItem.end);
+    fillCategories(root, eventItem.categories);
+    fillText(root, ".event-location", eventItem.location);
+    fillText(root, ".event-description", eventItem.description || "");
+    if (venue && venue.street) {
+        fillText(
+            root,
+            ".event-address",
+            venue.street + ", " + venue.postalCode + " " + venue.locality
+        );
+    }
+    fillLink(root, ".event-url", venue && venue.url);
+    fillImage(root, ".event-image", eventItem.attach, eventItem.summary);
+    fillPermalink(root, eventItem);
+};
+
+// Optional .event-permalink → detail page with ?event=<id>
+const fillPermalink = (root, eventItem) => {
+    const el = root.querySelector(".event-permalink");
+    if (!el || !eventDetailUrl || !eventItem.id) {
+        return;
+    }
+    const link = new URL(eventDetailUrl, window.location.href);
+    link.searchParams.set(eventIdParam, eventItem.id);
+    el.href = link.pathname + link.search + link.hash;
+};
+
 // Calendar day in UTC (YYYY-MM-DD), aligned with date-only event fields
 const todayUtc = () => new Date().toISOString().slice(0, 10);
 
@@ -294,8 +341,20 @@ const resolveTemplate = (name) => {
     return document.getElementById(id);
 };
 
-// Render one mount: filter + template from data attributes
-const showMount = (mount, events, venuesByFn) => {
+const eventIdFromQuery = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(eventIdParam) || "";
+};
+
+const findEventById = (events, id) => {
+    if (!id) {
+        return null;
+    }
+    return events.find((eventItem) => eventItem.id === id) || null;
+};
+
+// Render one list mount: filter + template from data attributes
+const showListMount = (mount, events, venuesByFn) => {
     const filterMode = (mount.dataset.filter || "all").toLowerCase();
     const template = resolveTemplate(mount.dataset.template);
     if (!template) {
@@ -309,30 +368,39 @@ const showMount = (mount, events, venuesByFn) => {
 
     filtered.forEach((eventItem) => {
         const clone = template.content.cloneNode(true);
-        const venue = venuesByFn[eventItem.location];
-
-        fillText(clone, ".event-title", eventItem.summary);
-        fillDateRange(clone, eventItem.start, eventItem.end);
-        fillCategories(clone, eventItem.categories);
-        fillText(clone, ".event-location", eventItem.location);
-        fillText(clone, ".event-description", eventItem.description || "");
-        if (venue && venue.street) {
-            fillText(
-                clone,
-                ".event-address",
-                venue.street + ", " + venue.postalCode + " " + venue.locality
-            );
-        }
-        fillLink(clone, ".event-url", venue && venue.url);
-        fillImage(clone, ".event-image", eventItem.attach, eventItem.summary);
-
+        fillEventIntoRoot(clone, eventItem, venuesByFn);
         eventList.appendChild(clone);
     });
 
     mount.replaceChildren(eventList);
 };
 
-// Render all [data-events] mounts from one shared JSON load
+// Render one detail mount from ?event=<id> (default template: detail)
+const showDetailMount = (mount, events, venuesByFn) => {
+    const template = resolveTemplate(mount.dataset.template || "detail");
+    if (!template) {
+        mount.textContent = "Template nicht gefunden";
+        return;
+    }
+
+    const id = eventIdFromQuery();
+    if (!id) {
+        mount.replaceChildren();
+        return;
+    }
+
+    const eventItem = findEventById(events, id);
+    if (!eventItem) {
+        mount.textContent = "Event nicht gefunden";
+        return;
+    }
+
+    const clone = template.content.cloneNode(true);
+    fillEventIntoRoot(clone, eventItem, venuesByFn);
+    mount.replaceChildren(clone);
+};
+
+// Render list and detail mounts from one shared JSON load
 const showEvents = (eventsData, venuesData) => {
     const venuesByFn = {};
     venuesData.venues.forEach((venue) => {
@@ -340,8 +408,11 @@ const showEvents = (eventsData, venuesData) => {
     });
 
     const events = eventsData.events || [];
-    mounts.forEach((mount) => {
-        showMount(mount, events, venuesByFn);
+    listMounts.forEach((mount) => {
+        showListMount(mount, events, venuesByFn);
+    });
+    detailMounts.forEach((mount) => {
+        showDetailMount(mount, events, venuesByFn);
     });
 };
 

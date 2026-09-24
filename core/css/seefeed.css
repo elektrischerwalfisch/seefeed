@@ -22,6 +22,7 @@
     grid-template-columns: 9rem 1fr;
     grid-template-areas:
         "dates title"
+        "dates permalink"
         "dates categories"
         "dates location"
         "dates more"
@@ -34,6 +35,15 @@
 
     .event-title {
         grid-area: title;
+    }
+
+    .event-permalink {
+        grid-area: permalink;
+
+        &[href=""],
+        &:not([href]) {
+            display: none;
+        }
     }
 
     .event-dates {

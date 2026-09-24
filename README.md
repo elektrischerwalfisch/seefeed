@@ -2,9 +2,14 @@
 
 Load events from a Nextcloud calendar (and venues from a CardDAV address book) and render them on a website via AJAX. Core assets are CMS-agnostic; thin adapters wire them into a host site. A plain demo adapter is included; WordPress (and other hosts) can follow the same pattern.
 
+Fetch uses **CalDAV / CardDAV** (today: Nextcloud + app password). It does **not** integrate Google Calendar or Microsoft Graph; other CalDAV/CardDAV hosts (e.g. iCloud) and public calendar URLs are possible follow-ups, not current defaults.
+
 ## Quick start (plain adapter)
 
 Open the repository root in a browser (redirects to `adapters/plain/`). The demo reads versioned JSON from `demo-data/`. Host integrations omit `eventsUrl` / `venuesUrl` to use the core defaults (`data/`), or set those URLs explicitly.
+
+- List demo: `adapters/plain/index.php`
+- Detail demo (Variante A): `adapters/plain/event-detail.php?event=<id>` (e.g. `demo-evening-talk@seefeed.local`)
 
 ## Fetch data from Nextcloud
 
@@ -22,7 +27,7 @@ curl -fsS "https://www.example.com/path/to/seefeed/fetch/fetch.php?token=YOUR_FE
 
 `fetch/config.php` is gitignored. Web calls without a valid `fetch_token` return 403. `config.php` is blocked via `.htaccess`. On success the script writes `data/events.json` and `data/venues.json` atomically (on failure, previous files are kept). Optional `write_schema => true` also writes `data/events.schema.json` (Schema.org JSON-LD).
 
-Recurring events (`RRULE` with `FREQ=WEEKLY` or `MONTHLY`, plus `EXDATE` / `RECURRENCE-ID`) are expanded into concrete occurrences within a configurable horizon (defaults: 3 months past, 6 months future; keys `rrule_horizon_past_months` / `rrule_horizon_future_months` in config). The JSON stays a flat event list.
+Recurring events (`RRULE` with `FREQ=WEEKLY` or `MONTHLY`, plus `EXDATE` / `RECURRENCE-ID`) are expanded into concrete occurrences within a configurable horizon (defaults: 3 months past, 6 months future; keys `rrule_horizon_past_months` / `rrule_horizon_future_months` in config). The JSON stays a flat event list. Each event gets a public **`id`**: ICS `UID` for singles, or `UID@start` for expanded RRULE occurrences (same `start` string as in JSON).
 `data/` is runtime-only (gitignored except `.gitkeep`). `demo-data/` is versioned demo content and is never written by fetch.
 
 Local Docker: make `data/` writable for the web server user (often `www-data`):
@@ -40,7 +45,7 @@ seefeed/
   core/           # JS, default CSS, HTML templates
   fetch/          # Nextcloud → JSON; optional schema.php
   adapters/
-    plain/        # Demo host page
+    plain/        # Demo: list + detail (shared include-seefeed.php)
     wordpress/    # placeholder for a future adapter
   demo-data/      # Versioned demo JSON (+ images)
   data/           # Runtime JSON (gitignored), optional schema + images
@@ -50,12 +55,27 @@ seefeed/
 
 1. Ship or submodule this repository into the host (e.g. `vendor/seefeed`).
 2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css` (structure). For the demo look, also load `core/css/seefeed.theme.css`; host sites usually skin events themselves instead.
-3. Place mounts such as `<section data-events data-filter="upcoming" data-template="teaser"></section>`.
+3. Place list mounts such as `<section data-events data-filter="upcoming" data-template="teaser"></section>`. For a detail page, use `<section data-event-detail data-template="detail"></section>`.
 4. Include the matching templates (`core/templates/event-*.html`) or host copies.
-5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, …) or rely on defaults pointing at `data/`.
+5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, `eventDetailUrl`, …) or rely on defaults pointing at `data/`.
 6. Run `fetch/fetch.php` on a schedule so `data/` stays current.
 
-See `adapters/plain/index.php` for a minimal working example.
+See `adapters/plain/index.php` (list) and `adapters/plain/event-detail.php` (detail) for a minimal Variante-A example.
+
+## Event detail view
+
+Recommended host pattern (**Variante A**): a **list page** with `[data-events]` and a **separate detail page** with `[data-event-detail]`. The host owns the detail page URL, `<title>`, meta description, and any JSON-LD.
+
+| Piece            | Convention                                                                  |
+| ---------------- | --------------------------------------------------------------------------- |
+| Event `id`       | From fetch: `UID`, or `UID@start` for RRULE occurrences                     |
+| Detail URL       | Query `?event=<id>` (param name: `eventIdParam`, default `"event"`)         |
+| List link        | Optional `<a class="event-permalink">`; filled when `eventDetailUrl` is set |
+| Detail template  | `#event-detail` (`data-template="detail"`)                                  |
+| Missing query    | Detail mount stays empty                                                    |
+| Unknown `id`     | Detail mount shows „Event nicht gefunden“                                   |
+
+Encode the id in the query (`encodeURIComponent`). Demo: list sets `eventDetailUrl: "./event-detail.php"`; open e.g. `event-detail.php?event=demo-evening-talk%40seefeed.local`.
 
 ## Templates
 
@@ -69,6 +89,7 @@ Structure CSS (`.event`) uses a two-column grid: date column | content column. D
 | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | `.event-dates`                                                                                             | Date column (`grid-area: dates`)                                          |
 | `.event-title`                                                                                             | Title row                                                                 |
+| `.event-permalink`                                                                                         | Optional link to detail page (`eventDetailUrl` + `?event=<id>`)           |
 | `.event-categories`                                                                                        | Optional categories row                                                   |
 | `.event-location` / `.event-more` / `.event-address` / `.event-url` / `.event-description` / `.event-image` | Content rows when used as **direct children** of `.event`                 |
 | `.event-main`                                                                                              | Optional wrapper for stacked body content (markup only; not filled by JS) |

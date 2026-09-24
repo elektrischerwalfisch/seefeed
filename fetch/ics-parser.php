@@ -20,7 +20,7 @@ const RRULE_HORIZON_PAST_MONTHS = 3;
 const RRULE_HORIZON_FUTURE_MONTHS = 6;
 
 /**
- * Parse ICS and return public event objects (recurrence expanded, `_ics` stripped).
+ * Parse ICS and return public event objects (recurrence expanded, `id` set, `_ics` stripped).
  *
  * @param array{
  *   past_months?:int,
@@ -563,6 +563,8 @@ function occurrenceFromMaster(array $master, DateTimeImmutable $occStart): array
         $event['_ics']['rrule'] = '';
         $event['_ics']['exdates'] = [];
         $event['_ics']['recurrence_id'] = '';
+        // Expanded from RRULE → public id is uid@start (see assignPublicEventId)
+        $event['_ics']['is_occurrence'] = true;
     }
 
     return $event;
@@ -664,13 +666,44 @@ function mapIcsPropertiesToEvent(array $props): ?array
 }
 
 /**
- * Remove internal `_ics` metadata from a parsed event (public JSON shape).
+ * Build public `id` from ICS UID (and occurrence start for RRULE instances).
+ *
+ * Singles: UID. Expanded RRULE occurrences and RECURRENCE-ID exceptions: UID@start.
+ *
+ * @param array<string, mixed> $event
+ */
+function assignPublicEventId(array $event): array
+{
+    $meta = $event['_ics'] ?? null;
+    if (!is_array($meta)) {
+        return $event;
+    }
+
+    $uid = trim((string) ($meta['uid'] ?? ''));
+    if ($uid === '') {
+        return $event;
+    }
+
+    $isOccurrence = !empty($meta['is_occurrence'])
+        || trim((string) ($meta['recurrence_id'] ?? '')) !== '';
+    $start = (string) ($event['start'] ?? '');
+
+    $event['id'] = $isOccurrence && $start !== ''
+        ? $uid . '@' . $start
+        : $uid;
+
+    return $event;
+}
+
+/**
+ * Remove internal `_ics` metadata and set public `id` (events.json shape).
  *
  * @param array<string, mixed> $event
  * @return array<string, mixed>
  */
 function stripIcsMetaFromEvent(array $event): array
 {
+    $event = assignPublicEventId($event);
     unset($event['_ics']);
     return $event;
 }

@@ -1,6 +1,7 @@
 {
     "events": [
         {
+            "id": "demo-workshop-series@seefeed.local",
             "summary": "Workshop series (multi-day, no time)",
             "start": "2026-10-05",
             "end": "2026-10-12",
@@ -11,6 +12,7 @@
             "description": "Demo event spanning several calendar days without clock times."
         },
         {
+            "id": "demo-conference-block@seefeed.local",
             "summary": "Conference block (multi-day, with time)",
             "start": "2026-06-12T09:00:00",
             "end": "2026-06-14T17:00:00",
@@ -22,6 +24,7 @@
             "attach": "demo-poster.svg"
         },
         {
+            "id": "demo-open-day@seefeed.local",
             "summary": "Open day (single-day, no time)",
             "start": "2026-03-01",
             "end": "2026-03-01",
@@ -32,6 +35,7 @@
             "description": "Demo event on one calendar day without clock times."
         },
         {
+            "id": "demo-evening-talk@seefeed.local",
             "summary": "Evening talk (single-day, with time)",
             "start": "2025-11-08T19:00:00",
             "end": "2025-11-08T21:30:00",
@@ -42,6 +46,7 @@
             "description": "Demo event on one day with start and end times."
         },
         {
+            "id": "demo-festival-week@seefeed.local",
             "summary": "Festival week (multi-day, no time)",
             "start": "2024-05-10",
             "end": "2024-05-18",
