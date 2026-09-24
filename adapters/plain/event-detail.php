@@ -24,14 +24,13 @@ declare(strict_types=1);
     <link rel="stylesheet" href="../../core/css/seefeed.theme.css">
     <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="page-event-detail">
 
     <div id="wrapper">
 
-        <h1>Seefeed – Event</h1>
-        <p><a href="./index.php">← Liste</a></p>
+        <p class="page-back"><a href="./index.php">« Back to List</a></p>
 
-        <div class="panel">
+        <div class="panel panel-detail">
             <section data-event-detail data-template="detail"></section>
         </div>
 

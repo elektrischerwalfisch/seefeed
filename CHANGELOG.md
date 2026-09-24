@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Polish event detail reading layout and date-part time stacking
 - feat: Add event detail page with public ids and list permalinks
 - feat: Add optional weekday slot for event date templates
 - feat: Add date-part grid layout, stacked teaser cards, and demo theme

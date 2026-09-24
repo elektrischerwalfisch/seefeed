@@ -1,7 +1,6 @@
 <template id="event-detail">
     <article class="event">
-        <h3 class="event-title"></h3>
-        <ul class="event-categories"></ul>
+        <h1 class="event-title"></h1>
         <p class="event-dates">
             <time class="event-start" datetime="">
                 <span class="event-weekday"></span>
@@ -19,10 +18,13 @@
                 <span class="event-time"></span>
             </time>
         </p>
-        <p class="event-location"></p>
-        <p class="event-address"></p>
-        <p class="event-url"></p>
-        <p class="event-description"></p>
+        <div class="event-content">
+            <ul class="event-categories"></ul>
+            <p class="event-location"></p>
+            <p class="event-address"></p>
+            <p class="event-url"></p>
+            <p class="event-description"></p>
+        </div>
         <p class="event-image"></p>
     </article>
 </template>

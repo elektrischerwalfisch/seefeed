@@ -59,11 +59,11 @@
     }
     .event-weekday {
         font-size: 1.2em;
-        line-height: 1.5;
+        line-height: 1.1;
     }
     .event-dates {
         font-family: var(--font-dates);
-        padding: 0.5rem 0.4rem;
+        padding: 0.6rem 0.4rem;
         color: var(--contrast);
         background-color: var(--base);
 
@@ -116,6 +116,36 @@
     border-bottom: none;
 }
 
-[data-template="full"] .event .event-dates .event-date-sep::before {
-    content: "--- ▾ ---";
+:is([data-template="full"], [data-template="detail"]) .event {
+    .event-dates .event-date-sep::before {
+        content: "--- ▾ ---";
+    }
+
+    .event-time {
+        font-size: 2em;
+        line-height: 1;
+    }
+}
+
+/* Detail page: reading layout (not a list card) */
+[data-template="detail"] .event {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+
+    .event-title {
+        margin: 0 0 1.2rem;
+        font-size: 1.85rem;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+
+    .event-image {
+        margin: 0.5rem 0 0;
+
+        img {
+            width: 100%;
+        }
+    }
+
 }

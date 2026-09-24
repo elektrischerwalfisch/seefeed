@@ -43,7 +43,7 @@ body {
     max-width: 38rem;
     margin: 0 auto;
 
-    h1 {
+    & > h1 {
         margin: 0 0 1.25rem;
         color: var(--contrast);
         font-family: var(--font-sans);
@@ -69,5 +69,27 @@ body {
             text-align: center;
             text-transform: uppercase;
         }
+    }
+}
+
+.page-event-detail #wrapper {
+
+    .page-back {
+        margin: 0 0 1rem;
+        font-size: 0.9rem;
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+
+            &:hover {
+                color: var(--contrast);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .panel-detail {
+        padding-top: 1.5rem;
     }
 }
