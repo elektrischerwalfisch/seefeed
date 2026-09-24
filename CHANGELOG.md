@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Add demo Schema.org JSON-LD fixture and list-page embed
 - feat: Polish event detail reading layout and date-part time stacking
 - feat: Add event detail page with public ids and list permalinks
 - feat: Add optional weekday slot for event date templates

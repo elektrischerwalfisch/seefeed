@@ -21,6 +21,17 @@ declare(strict_types=1);
     <link rel="stylesheet" href="../../core/css/seefeed.css">
     <link rel="stylesheet" href="../../core/css/seefeed.theme.css">
     <link rel="stylesheet" href="./style.css">
+
+    <?php
+    // JSON-LD: versioned demo fixture (fetch writes data/events.schema.json for hosts).
+    $schemaFile = __DIR__ . '/../../demo-data/events.schema.json';
+    if (is_readable($schemaFile)) {
+        echo '<script type="application/ld+json">' . file_get_contents($schemaFile) . '</script>';
+    } else {
+        echo '<!-- JSON-LD: demo-data/events.schema.json missing -->';
+    }
+    ?>
+    
 </head>
 <body>
 

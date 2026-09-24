@@ -1,0 +1,122 @@
+[
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Workshop series (multi-day, no time)",
+        "startDate": "2026-10-05",
+        "endDate": "2026-10-12",
+        "description": "Demo event spanning several calendar days without clock times.",
+        "organizer": {
+            "@type": "Organization",
+            "name": "City Cultural Office"
+        },
+        "url": "https://example.org/city-hall-annex",
+        "location": {
+            "@type": "Place",
+            "name": "City Hall Annex",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Example Street 12",
+                "postalCode": "10115",
+                "addressLocality": "Berlin",
+                "addressCountry": "DE"
+            }
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Conference block (multi-day, with time)",
+        "startDate": "2026-06-12",
+        "endDate": "2026-06-14",
+        "description": "Demo event spanning several days with start and end times.",
+        "organizer": {
+            "@type": "Organization",
+            "name": "Harbor Venue Ltd."
+        },
+        "url": "https://example.org/harbor-meeting-room",
+        "location": {
+            "@type": "Place",
+            "name": "Harbor Meeting Room",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Quay 7",
+                "postalCode": "20457",
+                "addressLocality": "Hamburg",
+                "addressCountry": "DE"
+            }
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Open day (single-day, no time)",
+        "startDate": "2026-03-01",
+        "endDate": "2026-03-01",
+        "description": "Demo event on one calendar day without clock times.",
+        "organizer": {
+            "@type": "Organization",
+            "name": "City Cultural Office"
+        },
+        "url": "https://example.org/city-hall-annex",
+        "location": {
+            "@type": "Place",
+            "name": "City Hall Annex",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Example Street 12",
+                "postalCode": "10115",
+                "addressLocality": "Berlin",
+                "addressCountry": "DE"
+            }
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Evening talk (single-day, with time)",
+        "startDate": "2025-11-08",
+        "endDate": "2025-11-08",
+        "description": "Demo event on one day with start and end times.",
+        "organizer": {
+            "@type": "Organization",
+            "name": "Community Center East"
+        },
+        "url": "https://example.org/community-center-east",
+        "location": {
+            "@type": "Place",
+            "name": "Community Center East",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Sample Road 3",
+                "postalCode": "10117",
+                "addressLocality": "Berlin",
+                "addressCountry": "DE"
+            }
+        }
+    },
+    {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": "Festival week (multi-day, no time)",
+        "startDate": "2024-05-10",
+        "endDate": "2024-05-18",
+        "description": "Past demo event spanning several days without clock times.",
+        "organizer": {
+            "@type": "Organization",
+            "name": "Harbor Venue Ltd."
+        },
+        "url": "https://example.org/harbor-meeting-room",
+        "location": {
+            "@type": "Place",
+            "name": "Harbor Meeting Room",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Quay 7",
+                "postalCode": "20457",
+                "addressLocality": "Hamburg",
+                "addressCountry": "DE"
+            }
+        }
+    }
+]

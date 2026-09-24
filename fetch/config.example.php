@@ -11,6 +11,8 @@
  *                             (avoid & = ? # + % space).
  *   debug                     true = verbose status on URL runs; CLI always verbose.
  *   write_schema              true = after successful fetch, write data/events.schema.json
+ *                             (file only — does not inject into HTML <head>; host embeds it.
+ *                             Plain demo uses versioned demo-data/events.schema.json on index.php.)
  *   schema_filter             "upcoming" (default) | "all"
  *   schema_event_type         Schema.org @type (default "Event"; e.g. "ExhibitionEvent")
  *   schema_event_image_base   Optional image URL prefix for JSON-LD (ATTACH basenames).
@@ -36,7 +38,7 @@ return [
     'addressbook_url' => 'https://cloud.example/remote.php/dav/addressbooks/users/USER/venues/',
     'fetch_token' => 'CHANGE_ME_LONG_RANDOM_STRING',
     'debug' => false,
-    'write_schema' => false,
+    'write_schema' => true,
     'schema_filter' => 'upcoming',
     'schema_event_type' => 'Event',
     'schema_event_image_base' => '',

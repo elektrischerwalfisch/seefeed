@@ -43,7 +43,7 @@ const eventImageBase =
 // data-template: short name → template id "event-{name}" (default "full"; PHP includes fragments)
 const latestCount = cfg.latestCount !== undefined ? cfg.latestCount : 3;
 const upcomingCount = cfg.upcomingCount !== undefined ? cfg.upcomingCount : 3;
-// Detail URL query key (Variante A): ?event=<id>
+// Detail URL query key: ?event=<id>
 const eventIdParam = cfg.eventIdParam || "event";
 // Base URL for list → detail permalinks (omit = do not fill .event-permalink)
 const eventDetailUrl =

@@ -1,6 +1,6 @@
 <?php
 /**
- * Seefeed plain adapter – event detail demo page (Variante A).
+ * Seefeed plain adapter – event detail demo page.
  *
  * Open with ?event=<id> (e.g. demo-evening-talk@seefeed.local).
  *
@@ -23,6 +23,7 @@ declare(strict_types=1);
     <link rel="stylesheet" href="../../core/css/seefeed.css">
     <link rel="stylesheet" href="../../core/css/seefeed.theme.css">
     <link rel="stylesheet" href="./style.css">
+    <!-- JSON-LD list embed lives on index.php only; detail pages may add a single Event later -->
 </head>
 <body class="page-event-detail">
 
