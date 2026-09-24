@@ -141,6 +141,7 @@
 
     .event-address {
         grid-area: address;
+        white-space: pre-line;
     }
 
     .event-url {

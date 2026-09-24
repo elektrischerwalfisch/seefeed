@@ -277,7 +277,7 @@ const fillEventIntoRoot = (root, eventItem, venuesByFn) => {
         fillText(
             root,
             ".event-address",
-            venue.street + ", " + venue.postalCode + " " + venue.locality
+            venue.street + "\n" + venue.postalCode + " " + venue.locality
         );
     }
     fillLink(root, ".event-url", venue && venue.url);

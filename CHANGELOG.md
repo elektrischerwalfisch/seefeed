@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Break event address onto two lines and inline fetch config comments
 - feat: Self-host Inter and Barlow Condensed fonts without Google CDN
 - feat: Add demo Schema.org JSON-LD fixture and list-page embed
 - feat: Polish event detail reading layout and date-part time stacking
