@@ -2,8 +2,9 @@
  * Seefeed demo theme – visual defaults for the plain adapter (and demos).
  * Host sites typically omit this file and skin .event* with their own CSS.
  *
- * Typography (variant C): Inter for UI text; Barlow Condensed only on .event-dates.
- * Hosts that load fonts themselves can override --font-sans / --font-dates.
+ * Typography: Inter for UI text; Barlow Condensed on .event-dates.
+ * Fonts are self-hosted under core/fonts/ (no Google Fonts CDN).
+ * Hosts can override --font-sans / --font-dates.
  *
  * @file        core/css/seefeed.theme.css
  * @project     Seefeed
@@ -11,7 +12,61 @@
  * @version     0.1.0
  * @since       2026-09
  * @see         core/css/seefeed.css
+ * @see         core/fonts/README.md
  */
+
+/* Self-hosted Inter (Latin) */
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url("../fonts/inter/inter-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    src: url("../fonts/inter/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 600;
+    src: url("../fonts/inter/inter-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url("../fonts/inter/inter-latin-700-normal.woff2") format("woff2");
+}
+
+/* Self-hosted Barlow Condensed (Latin) — date column */
+@font-face {
+    font-family: "Barlow Condensed";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    src: url("../fonts/barlow-condensed/barlow-condensed-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow Condensed";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 600;
+    src: url("../fonts/barlow-condensed/barlow-condensed-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Barlow Condensed";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url("../fonts/barlow-condensed/barlow-condensed-latin-700-normal.woff2") format("woff2");
+}
 
 :root {
     --base: #e4e2dc;

@@ -53,7 +53,7 @@ Options: `--raw` (no expansion), `--internal` (keep `_ics`), `--now=ISO`, `--pas
 
 ```text
 seefeed/
-  core/           # JS, default CSS, HTML templates
+  core/           # JS, CSS, templates; fonts/ for self-hosted demo theme typefaces
   fetch/          # Nextcloud → JSON; schema.php; fixtures + ics-parser-fixture-test.php
   adapters/
     plain/        # Demo: list + detail (shared include-seefeed.php)
@@ -65,7 +65,7 @@ seefeed/
 ## Embed on a host site
 
 1. Ship or submodule this repository into the host (e.g. `vendor/seefeed`).
-2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css` (structure). For the demo look, also load `core/css/seefeed.theme.css`; host sites usually skin events themselves instead.
+2. Include `core/js/seefeed.js` and optionally `core/css/seefeed.css` (structure). For the demo look, also load `core/css/seefeed.theme.css` (self-hosts Inter / Barlow Condensed from `core/fonts/`; no Google Fonts CDN); host sites usually skin events themselves instead.
 3. Place list mounts such as `<section data-events data-filter="upcoming" data-template="teaser"></section>`. For a detail page, use `<section data-event-detail data-template="detail"></section>`.
 4. Include the matching templates (`core/templates/event-*.html`) or host copies.
 5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, `eventDetailUrl`, …) or rely on defaults pointing at `data/`.

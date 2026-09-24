@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- feat: Self-host Inter and Barlow Condensed fonts without Google CDN
 - feat: Add demo Schema.org JSON-LD fixture and list-page embed
 - feat: Polish event detail reading layout and date-part time stacking
 - feat: Add event detail page with public ids and list permalinks
