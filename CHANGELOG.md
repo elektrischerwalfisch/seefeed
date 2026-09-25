@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- docs: Tighten README for public release and use English not-found messages
 - refactor: Restructure demo layout and move ICS tests under test-fixtures
 
 ## 0.2.1 - 2026-09-25

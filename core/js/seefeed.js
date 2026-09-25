@@ -357,7 +357,7 @@ const showListMount = (mount, events, venuesByFn) => {
     const filterMode = (mount.dataset.filter || "all").toLowerCase();
     const template = resolveTemplate(mount.dataset.template);
     if (!template) {
-        mount.textContent = "Template nicht gefunden";
+        mount.textContent = "Template not found";
         return;
     }
 
@@ -378,7 +378,7 @@ const showListMount = (mount, events, venuesByFn) => {
 const showDetailMount = (mount, events, venuesByFn) => {
     const template = resolveTemplate(mount.dataset.template || "detail");
     if (!template) {
-        mount.textContent = "Template nicht gefunden";
+        mount.textContent = "Template not found";
         return;
     }
 
@@ -390,7 +390,7 @@ const showDetailMount = (mount, events, venuesByFn) => {
 
     const eventItem = findEventById(events, id);
     if (!eventItem) {
-        mount.textContent = "Event nicht gefunden";
+        mount.textContent = "Event not found";
         return;
     }
 
