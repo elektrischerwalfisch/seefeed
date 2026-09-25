@@ -4,6 +4,7 @@
  *
  * @file        adapters/plain/index.php
  * @project     Seefeed
+ * @author      elektrischerwalfisch
  * @see         adapters/plain/event-detail.php
  * @see         adapters/plain/include-seefeed.php
  */

@@ -6,8 +6,7 @@ declare(strict_types=1);
  *
  * @file        fetch/schema.php
  * @project     Seefeed
- * @author      Seefeed
- * @version     0.1.0
+ * @author      elektrischerwalfisch
  * @since       2026-09
  * @see         fetch/fetch.php
  */

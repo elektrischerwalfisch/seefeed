@@ -11,8 +11,7 @@ declare(strict_types=1);
  *
  * @file        fetch/fetch.php
  * @project     Seefeed
- * @author      Seefeed
- * @version     0.1.0
+ * @author      elektrischerwalfisch
  * @since       2026-09
  * @see         fetch/config.example.php
  * @see         fetch/schema.php

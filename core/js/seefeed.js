@@ -8,8 +8,7 @@
  *
  * @file        core/js/seefeed.js
  * @project     Seefeed
- * @author      Seefeed
- * @version     0.1.0
+ * @author      elektrischerwalfisch
  * @since       2026-09
  * @requires    DOM with mounts and #event-{name} templates
  * @see         adapters/plain/index.php (demo config)

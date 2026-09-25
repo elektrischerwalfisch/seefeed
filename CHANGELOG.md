@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- chore: Add VERSION file and set file author
+
 ## 0.2.0 - 2026-09-24
 
 - chore: Release Seefeed 0.2.0

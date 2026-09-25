@@ -7,6 +7,7 @@
  *
  * @file        adapters/plain/include-seefeed.php
  * @project     Seefeed
+ * @author      elektrischerwalfisch
  * @see         adapters/plain/index.php
  * @see         adapters/plain/event-detail.php
  */

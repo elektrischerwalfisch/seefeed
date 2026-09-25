@@ -14,6 +14,11 @@
  * --now=ISO   fixed "now" for horizon (reproducible fixtures)
  * --past=N    override past horizon months
  * --future=N  override future horizon months
+ *
+ * @file        fetch/ics-parser-fixture-test.php
+ * @project     Seefeed
+ * @author      elektrischerwalfisch
+ * @see         fetch/ics-parser.php
  */
 declare(strict_types=1);
 

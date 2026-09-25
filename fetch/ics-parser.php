@@ -8,6 +8,7 @@
  *
  * @file        fetch/ics-parser.php
  * @project     Seefeed
+ * @author      elektrischerwalfisch
  * @see         fetch/fetch.php
  * @see         fetch/ics-parser-fixture-test.php
  */

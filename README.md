@@ -4,6 +4,8 @@ Load events from a Nextcloud calendar (and venues from a CardDAV address book) a
 
 Fetch uses **CalDAV / CardDAV** (today: Nextcloud + app password). It does **not** integrate Google Calendar or Microsoft Graph; other CalDAV/CardDAV hosts (e.g. iCloud) and public calendar URLs are possible follow-ups, not current defaults.
 
+Package version: root file `VERSION` (single SemVer line) plus `CHANGELOG.md` and Git tags. Hosts can `cat vendor/seefeed/VERSION` to see which release a submodule checkout is on.
+
 ## Quick start (plain adapter)
 
 Open the repository root in a browser (redirects to `adapters/plain/`). The demo reads versioned JSON from `demo-data/`. Host integrations omit `eventsUrl` / `venuesUrl` to use the core defaults (`data/`), or set those URLs explicitly.
