@@ -3,11 +3,11 @@
 /**
  * Parse a local ICS fixture via fetch/ics-parser.php (no CalDAV, no config.php).
  *
- * Usage:
- *   php fetch/ics-parser-fixture-test.php fetch/fixtures/single-event.ics
- *   php fetch/ics-parser-fixture-test.php --now=2026-09-22 fetch/fixtures/monthly-byday-3we.ics
- *   php fetch/ics-parser-fixture-test.php --internal --now=2026-09-22 fetch/fixtures/series-meta-only.ics
- *   php fetch/ics-parser-fixture-test.php --raw fetch/fixtures/series-meta-only.ics
+ * Usage (from repo root):
+ *   php fetch/test-fixtures/run.php fetch/test-fixtures/single-event.ics
+ *   php fetch/test-fixtures/run.php --now=2026-09-22 fetch/test-fixtures/monthly-byday-3we.ics
+ *   php fetch/test-fixtures/run.php --internal --now=2026-09-22 fetch/test-fixtures/series-meta-only.ics
+ *   php fetch/test-fixtures/run.php --raw fetch/test-fixtures/series-meta-only.ics
  *
  * --internal  keep `_ics` after expansion
  * --raw       no RRULE expansion (parsed VEVENTs only)
@@ -15,14 +15,14 @@
  * --past=N    override past horizon months
  * --future=N  override future horizon months
  *
- * @file        fetch/ics-parser-fixture-test.php
+ * @file        fetch/test-fixtures/run.php
  * @project     Seefeed
  * @author      elektrischerwalfisch
  * @see         fetch/ics-parser.php
  */
 declare(strict_types=1);
 
-require_once __DIR__ . '/ics-parser.php';
+require_once __DIR__ . '/../ics-parser.php';
 
 $args = array_slice($argv, 1);
 $keepInternal = false;
@@ -57,7 +57,7 @@ foreach ($args as $arg) {
 }
 
 if ($path === '' || !is_readable($path)) {
-    fwrite(STDERR, "Usage: php fetch/ics-parser-fixture-test.php [--raw|--internal] [--now=ISO] [--past=N] [--future=N] <file.ics>\n");
+    fwrite(STDERR, "Usage: php fetch/test-fixtures/run.php [--raw|--internal] [--now=ISO] [--past=N] [--future=N] <file.ics>\n");
     exit(1);
 }
 

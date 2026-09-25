@@ -1,14 +1,14 @@
 <?php
 /**
- * Seefeed plain adapter – event detail demo page.
+ * Seefeed demo – event detail demo page.
  *
  * Open with ?event=<id> (e.g. demo-evening-talk@seefeed.local).
  *
- * @file        adapters/plain/event-detail.php
+ * @file        demo/event-detail.php
  * @project     Seefeed
  * @author      elektrischerwalfisch
- * @see         adapters/plain/index.php
- * @see         adapters/plain/include-seefeed.php
+ * @see         demo/index.php
+ * @see         demo/include-seefeed.php
  */
 declare(strict_types=1);
 ?>
@@ -18,8 +18,8 @@ declare(strict_types=1);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seefeed – Event</title>
-    <link rel="stylesheet" href="../../core/css/seefeed.css">
-    <link rel="stylesheet" href="../../core/css/seefeed.theme.css">
+    <link rel="stylesheet" href="../core/css/seefeed.css">
+    <link rel="stylesheet" href="../core/css/seefeed.theme.css">
     <link rel="stylesheet" href="./style.css">
     <!-- JSON-LD list embed lives on index.php only; detail pages may add a single Event later -->
 </head>

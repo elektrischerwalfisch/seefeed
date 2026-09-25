@@ -1,17 +1,17 @@
 # Seefeed
 
-Load events from a Nextcloud calendar (and venues from a CardDAV address book) and render them on a website via AJAX. Core assets are CMS-agnostic; thin adapters wire them into a host site. A plain demo adapter is included; WordPress (and other hosts) can follow the same pattern.
+Load events from a Nextcloud calendar (and venues from a CardDAV address book) and render them on a website via AJAX. Core assets are CMS-agnostic; hosts wire them in (e.g. theme or submodule). A runnable **demo** lives under `demo/`.
 
 Fetch uses **CalDAV / CardDAV** (today: Nextcloud + app password). It does **not** integrate Google Calendar or Microsoft Graph; other CalDAV/CardDAV hosts (e.g. iCloud) and public calendar URLs are possible follow-ups, not current defaults.
 
 Package version: root file `VERSION` (single SemVer line) plus `CHANGELOG.md` and Git tags. Hosts can `cat vendor/seefeed/VERSION` to see which release a submodule checkout is on.
 
-## Quick start (plain adapter)
+## Quick start (demo)
 
-Open the repository root in a browser (redirects to `adapters/plain/`). The demo reads versioned JSON from `demo-data/`. Host integrations omit `eventsUrl` / `venuesUrl` to use the core defaults (`data/`), or set those URLs explicitly.
+Open the repository root in a browser (redirects to `demo/`). The demo reads versioned JSON from `demo/sample-data/`. Host integrations omit `eventsUrl` / `venuesUrl` to use the core defaults (`data/`), or set those URLs explicitly.
 
-- List demo: `adapters/plain/index.php`
-- Detail demo: `adapters/plain/event-detail.php?event=<id>` (e.g. `demo-evening-talk@seefeed.local`)
+- List demo: `demo/index.php`
+- Detail demo: `demo/event-detail.php?event=<id>` (e.g. `demo-evening-talk@seefeed.local`)
 
 ## Fetch data from Nextcloud
 
@@ -27,10 +27,10 @@ Shared-hosting cron (HTTP):
 curl -fsS "https://www.example.com/path/to/seefeed/fetch/fetch.php?token=YOUR_FETCH_TOKEN"
 ```
 
-`fetch/config.php` is gitignored. Web calls without a valid `fetch_token` return 403. `config.php` is blocked via `.htaccess`. On success the script writes `data/events.json` and `data/venues.json` atomically (on failure, previous files are kept). With `write_schema => true` (default in `config.example.php`) it also writes `data/events.schema.json` (Schema.org JSON-LD). That file is **not** injected into HTML by fetch — the host embeds it. The plain demo embeds a versioned fixture `demo-data/events.schema.json` on `adapters/plain/index.php` only (not on the detail page; a single-event JSON-LD there is optional later).
+`fetch/config.php` is gitignored. Web calls without a valid `fetch_token` return 403. `config.php` is blocked via `.htaccess`. On success the script writes `data/events.json` and `data/venues.json` atomically (on failure, previous files are kept). With `write_schema => true` (default in `config.example.php`) it also writes `data/events.schema.json` (Schema.org JSON-LD). That file is **not** injected into HTML by fetch — the host embeds it. The demo embeds a versioned fixture `demo/sample-data/events.schema.json` on `demo/index.php` only (not on the detail page; a single-event JSON-LD there is optional later).
 
 Recurring events (`RRULE` with `FREQ=WEEKLY` or `MONTHLY`, plus `EXDATE` / `RECURRENCE-ID`) are expanded into concrete occurrences within a configurable horizon (defaults: 3 months past, 6 months future; keys `rrule_horizon_past_months` / `rrule_horizon_future_months` in config). The JSON stays a flat event list. Each event gets a public **`id`**: ICS `UID` for singles, or `UID@start` for expanded RRULE occurrences (same `start` string as in JSON).
-`data/` is runtime-only (gitignored except `.gitkeep`). `demo-data/` is versioned demo content and is never written by fetch.
+`data/` is runtime-only (gitignored except `.gitkeep`). `demo/sample-data/` is versioned demo content and is never written by fetch.
 
 Local Docker: make `data/` writable for the web server user (often `www-data`):
 
@@ -40,27 +40,25 @@ chmod 777 data
 chmod 666 data/events.json data/venues.json
 ```
 
-### Local ICS fixtures (no CalDAV)
+### Local ICS test fixtures (no CalDAV)
 
-`fetch/ics-parser-fixture-test.php` parses versioned files under `fetch/fixtures/` via `ics-parser.php` (no `config.php`, no network). Useful to check RRULE expansion, horizons, and public `id`s:
+`fetch/test-fixtures/run.php` parses versioned ICS files in the same folder via `ics-parser.php` (no `config.php`, no network). Useful to check RRULE expansion, horizons, and public `id`s:
 
 ```bash
-php fetch/ics-parser-fixture-test.php fetch/fixtures/single-event.ics
-php fetch/ics-parser-fixture-test.php --now=2026-09-22 fetch/fixtures/monthly-byday-3we.ics
+php fetch/test-fixtures/run.php fetch/test-fixtures/single-event.ics
+php fetch/test-fixtures/run.php --now=2026-09-22 fetch/test-fixtures/monthly-byday-3we.ics
 ```
 
-Options: `--raw` (no expansion), `--internal` (keep `_ics`), `--now=ISO`, `--past=N`, `--future=N`. With Docker: `docker exec seefeed-web php fetch/ics-parser-fixture-test.php …` (container name may differ).
+Options: `--raw` (no expansion), `--internal` (keep `_ics`), `--now=ISO`, `--past=N`, `--future=N`. With Docker: `docker exec seefeed-web php fetch/test-fixtures/run.php …` (container name may differ).
 
 ## Layout
 
 ```text
 seefeed/
   core/           # JS, CSS, templates; fonts/ for self-hosted demo theme typefaces
-  fetch/          # Nextcloud → JSON; schema.php; fixtures + ics-parser-fixture-test.php
-  adapters/
-    plain/        # Demo: list + detail (shared include-seefeed.php)
-    wordpress/    # placeholder for a future adapter
-  demo-data/      # Versioned demo JSON (+ images)
+  fetch/          # Nextcloud → JSON; schema.php; test-fixtures/ (ICS samples + run.php)
+  demo/           # Runnable demo: list + detail (shared include-seefeed.php)
+    sample-data/  # Versioned demo JSON (+ images); never written by fetch
   data/           # Runtime JSON (gitignored), optional schema + images
 ```
 
@@ -73,11 +71,11 @@ seefeed/
 5. Set `window.Seefeed` before the script (JSON URLs, locale, counts, `eventDetailUrl`, …) or rely on defaults pointing at `data/`.
 6. Run `fetch/fetch.php` on a schedule so `data/` stays current.
 
-See `adapters/plain/index.php` (list) and `adapters/plain/event-detail.php` (detail) for a minimal example.
+See `demo/index.php` (list) and `demo/event-detail.php` (detail) for a minimal example.
 
 ## Event detail view
 
-Recommended host pattern: a **list page** with `[data-events]` and a **separate detail page** with `[data-event-detail]`. The host owns the detail page URL, `<title>`, meta description, and JSON-LD. Embed the upcoming **list** (`data/events.schema.json` after fetch) on the list/home page. The plain demo uses `demo-data/events.schema.json` on `adapters/plain/index.php`. Detail pages should not reuse that full list; an optional single-`Event` JSON-LD can follow later.
+Recommended host pattern: a **list page** with `[data-events]` and a **separate detail page** with `[data-event-detail]`. The host owns the detail page URL, `<title>`, meta description, and JSON-LD. Embed the upcoming **list** (`data/events.schema.json` after fetch) on the list/home page. The demo uses `demo/sample-data/events.schema.json` on `demo/index.php`. Detail pages should not reuse that full list; an optional single-`Event` JSON-LD can follow later.
 
 | Piece            | Convention                                                                  |
 | ---------------- | --------------------------------------------------------------------------- |

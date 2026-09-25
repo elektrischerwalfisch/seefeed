@@ -8,7 +8,7 @@
  * @author      elektrischerwalfisch
  * @see         fetch/fetch.php
  * @see         fetch/schema.php
- * @see         README.md (JSON-LD embed; ICS fixtures)
+ * @see         README.md (JSON-LD embed; ICS test fixtures)
  */
 declare(strict_types=1);
 

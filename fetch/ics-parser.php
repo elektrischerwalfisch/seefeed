@@ -2,7 +2,7 @@
 /**
  * Seefeed ICS parsing – map VEVENT blocks to the events.json shape.
  *
- * Used by fetch.php (CalDAV) and ics-parser-fixture-test.php (local fixtures).
+ * Used by fetch.php (CalDAV) and fetch/test-fixtures/run.php (local fixtures).
  * Recurring VEVENTs with a supported RRULE are expanded into concrete
  * occurrences within a configurable time horizon.
  *
@@ -10,7 +10,7 @@
  * @project     Seefeed
  * @author      elektrischerwalfisch
  * @see         fetch/fetch.php
- * @see         fetch/ics-parser-fixture-test.php
+ * @see         fetch/test-fixtures/run.php
  */
 declare(strict_types=1);
 

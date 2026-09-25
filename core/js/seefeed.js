@@ -11,14 +11,14 @@
  * @author      elektrischerwalfisch
  * @since       2026-09
  * @requires    DOM with mounts and #event-{name} templates
- * @see         adapters/plain/index.php (demo config)
+ * @see         demo/index.php
  */
 
 "use strict";
 
 // --- Options (adapter may set window.Seefeed before this script) ----------
 const cfg = window.Seefeed || {};
-// Defaults assume runtime under data/; plain adapter points at demo-data/
+// Defaults assume runtime under data/; demo points at demo/sample-data/
 const eventsUrl = cfg.eventsUrl || "../../data/events.json";
 const venuesUrl = cfg.venuesUrl || "../../data/venues.json";
 const dateLocale = cfg.dateLocale || "de-DE";

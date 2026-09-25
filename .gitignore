@@ -1,8 +1,9 @@
 .env
+.env.*
 fetch/config.php
 docker-compose.yml
-/index.php
 /doc/
+.cursorignore
 
 # Runtime output from fetch (demo JSON lives in demo-data/)
 /data/*
