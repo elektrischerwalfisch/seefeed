@@ -2,6 +2,7 @@
 .env.*
 fetch/config.php
 docker-compose.yml
+/index.php
 /doc/
 .cursorignore
 

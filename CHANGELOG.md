@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- refactor: Restructure demo layout and move ICS tests under test-fixtures
+
 ## 0.2.1 - 2026-09-25
 
 - chore: Release Seefeed 0.2.1
