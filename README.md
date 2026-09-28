@@ -101,7 +101,6 @@ Filled inside each `<time class="event-start|event-end">`:
 
 Day/month/year parts use the same `dateLocale` and day/month/year/`timeZone` from `dateDisplay` as `.event-date`. Set `dateDisplay.weekday` to `"narrow"` | `"short"` | `"long"` to fill `.event-weekday`; it is **not** added to `.event-date`. Hosts that only need a single date string keep `.event-date` and omit the part slots.
 
-## License / status
+## License
 
-Work in progress. Adjust hosting paths and credentials per environment; never commit `fetch/config.php` or `.env`.
-
+MIT — see [`LICENSE`](LICENSE). Demo theme fonts under `core/fonts/` use their own OFL licenses (`core/fonts/*/OFL.txt`).

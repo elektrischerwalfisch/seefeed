@@ -56,5 +56,12 @@ declare(strict_types=1);
 
     </div>
 
+    <footer>
+        <p>© <?= date('Y') ?> Seefeed-Demo ·
+            <a href="https://www.elektrischerwalfisch.de">elektrischerwalfisch</a> ·
+            <a href="https://github.com/elektrischerwalfisch/seefeed">GitHub</a> ·
+            MIT</p>
+    </footer>
+
 </body>
 </html>
