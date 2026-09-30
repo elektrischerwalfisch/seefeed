@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## 0.2.2 - 2026-09-30
+
+- chore: Release Seefeed 0.2.2
 - feat: Add demo footer attribution and MIT license section in README
 - docs: Tighten README for public release and use English not-found messages
 - refactor: Restructure demo layout and move ICS tests under test-fixtures
